@@ -3,10 +3,57 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "uni-app"
+				"navigationBarTitleText": "uni-app",
+				"usingComponents": {
+					"van-button": "/wxcomponents/vant/button/index"
+				}
+			}
+		},
+		{
+			"path": "pages/find/index",
+			"style": {
+				"navigationBarTitleText": "发现",
+				"usingComponents": {
+					"van-button": "/wxcomponents/vant/button/index"
+				}
+			}
+		},
+		{
+			"path": "pages/author/index",
+			"style": {
+				"navigationBarTitleText": "我的",
+				"usingComponents": {
+					"van-button": "/wxcomponents/vant/button/index"
+				}
 			}
 		}
 	],
+	"tabBar": {
+		"color": "#CCCCCC",
+		"selectedColor": "#196FF1",
+		"borderStyle": "black",
+		"backgroundColor": "#ffffff",
+		"list": [
+			{
+				"pagePath": "pages/index/index",
+				"iconPath": "static/tabbar/shuati.png",
+				"selectedIconPath": "static/tabbar/shuati-active.png",
+				"text": "刷题"
+			},
+			{
+				"pagePath": "pages/find/index",
+				"iconPath": "static/tabbar/faxian.png",
+				"selectedIconPath": "static/tabbar/faxian-active.png",
+				"text": "发现"
+			},
+			{
+				"pagePath": "pages/author/index",
+				"iconPath": "static/tabbar/auth.png",
+				"selectedIconPath": "static/tabbar/auth-active.png",
+				"text": "我的"
+			}
+		]
+	},
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
