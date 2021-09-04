@@ -2,21 +2,32 @@
   <view class="content">
     <image class="logo" src="/static/logo.png"></image>
     <view>
-      <text class="title">{{ title }}666</text>
-      <van-button type="default">默认按钮</van-button>
+      <text class="title">{{ organization_id }}</text>
+      <van-button type="default" @click="handleClick">默认按钮</van-button>
     </view>
   </view>
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
       title: "Hello",
     };
   },
-  onLoad() {},
-  methods: {},
+  onLoad() {
+    this.getAppInfo();
+  },
+  computed: {
+    ...mapGetters(["organization_id"]),
+  },
+  methods: {
+    ...mapActions(["getAppInfo"]),
+    handleClick() {
+      console.log(111);
+    },
+  },
 };
 </script>
 

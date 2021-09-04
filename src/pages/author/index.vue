@@ -2,12 +2,13 @@
   <view class="content">
     <view>
       <text class="title">{{ title }}</text>
-      <van-button type="success">默认按钮</van-button>
+      <van-button type="success" @click="getVersion">默认按钮</van-button>
     </view>
   </view>
 </template>
 
 <script>
+import { getVersion } from "@/api/user";
 export default {
   data() {
     return {
@@ -15,31 +16,22 @@ export default {
     };
   },
   onLoad() {},
-  methods: {},
+  methods: {
+    async getVersion() {
+      const data = {
+        appId: "wxb8322f5e02dbbc3d",
+      };
+      const res = await getVersion(data);
+      console.log(res);
+    },
+  },
 };
 </script>
 
-<style>
+<style lang="less" scoped>
 .content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.logo {
-  height: 200rpx;
-  width: 200rpx;
-  margin: 200rpx auto 50rpx auto;
-}
-
-.text-area {
-  display: flex;
-  justify-content: center;
-}
-
-.title {
-  font-size: 36rpx;
-  color: #8f8f94;
+  .title {
+    color: red;
+  }
 }
 </style>
