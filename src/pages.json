@@ -5,7 +5,8 @@
 			"style": {
 				"navigationBarTitleText": "uni-app",
 				"usingComponents": {
-					"van-button": "/wxcomponents/vant/button/index"
+					"van-button": "/wxcomponents/vant/button/index",
+					"van-action-sheet": "/wxcomponents/vant/action-sheet/index"
 				}
 			}
 		},
@@ -49,9 +50,9 @@
 		]
 	},
 	"globalStyle": {
-		"navigationBarTextStyle": "black",
+		"navigationBarTextStyle": "#ffffff",
 		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#F8F8F8",
+		"navigationBarBackgroundColor": "#199FFF",
 		"backgroundColor": "#F8F8F8"
 	}
 }
