@@ -14,5 +14,6 @@ export default {
 
 <style lang="less" >
 /*每个页面公共css */
-@import "./style/index.less";
+@import "@/wxcomponents/vant/common/index.wxss";
+@import "@/styles/index.less";
 </style>
