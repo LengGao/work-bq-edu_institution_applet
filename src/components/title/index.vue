@@ -1,9 +1,15 @@
 <template>
-  <div class="title"><slot></slot></div>
+  <div class="title" :style="{ color }"><slot></slot></div>
 </template>
 <script>
 export default {
   name: "title",
+  props: {
+    color: {
+      type: String,
+      default: "#999",
+    },
+  },
 };
 </script>
 <style lang="less" scoped>
