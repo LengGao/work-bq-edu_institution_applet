@@ -82,7 +82,7 @@
 <script>
 import Header from "./components/header.vue";
 import Title from "@/components/title";
-import Circular from "./components/circular.vue";
+import Circular from "@/components/circular";
 import Footer from "./components/footer.vue";
 export default {
   name: "answerSheet",

@@ -1,6 +1,70 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+			"path": "pages/challengeList/index",
+			"style": {
+				"navigationBarTitleText": "挑战榜",
+				"usingComponents": {}
+			}
+		},
+		{
+			"path": "pages/brushQuestionChallenge/index",
+			"style": {
+				"navigationBarTitleText": "刷题挑战",
+				"usingComponents": {}
+			}
+		},
+		{
+			"path": "pages/mockExamination/index",
+			"style": {
+				"navigationBarTitleText": "模拟考试",
+				"usingComponents": {}
+			}
+		},
+		{
+			"path": "pages/overTheYears/index",
+			"style": {
+				"navigationBarTitleText": "历年真题",
+				"usingComponents": {},
+				"navigationBarBackgroundColor": "#605CF7"
+			}
+		},
+		{
+			"path": "pages/overYearIntroduce/index",
+			"style": {
+				"navigationBarTitleText": "试卷介绍",
+				"usingComponents": {}
+			}
+		},
+		{
+			"path": "pages/clockIn/index",
+			"style": {
+				"navigationBarTitleText": "每日打卡",
+				"usingComponents": {}
+			}
+		},
+		{
+			"path": "pages/chapter/index",
+			"style": {
+				"navigationBarTitleText": "章节练习",
+				"usingComponents": {}
+			}
+		},
+		{
+			"path": "pages/testResults/index",
+			"style": {
+				"navigationBarTitleText": "uni-app",
+				"usingComponents": {}
+			}
+		},
+		{
+			"path": "pages/answerSheet/index",
+			"style": {
+				"navigationBarTitleText": "uni-app",
+				"usingComponents": {}
+			}
+		},
+		{
 			"path": "pages/selectQuestionBank/index",
 			"style": {
 				"navigationBarTitleText": "uni-app",
