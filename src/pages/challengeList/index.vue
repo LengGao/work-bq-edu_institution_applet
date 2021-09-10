@@ -154,7 +154,7 @@ export default {
         display: flex;
         align-items: center;
         text-align: center;
-        height: 110rpx;
+        height: 120rpx;
         box-sizing: border-box;
       }
     }
@@ -212,11 +212,6 @@ export default {
         opacity: 0.8;
       }
     }
-  }
-
-  .button {
-    background-color: green;
-    .radius();
   }
 }
 </style>

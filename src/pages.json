@@ -1,6 +1,51 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+			"path": "pages/login/index",
+			"style": {
+				"navigationBarTitleText": "登录",
+				"usingComponents": {
+					"van-button": "/wxcomponents/vant/button/index"
+				}
+			}
+		},
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "uni-app",
+				"usingComponents": {
+					"van-button": "/wxcomponents/vant/button/index",
+					"van-action-sheet": "/wxcomponents/vant/action-sheet/index"
+				}
+			}
+		},
+		{
+			"path": "pages/user/index",
+			"style": {
+				"navigationBarTitleText": "个人中心",
+				"usingComponents": {
+					"van-button": "/wxcomponents/vant/button/index"
+				}
+			}
+		},
+		{
+			"path": "pages/favorites/index",
+			"style": {
+				"navigationBarTitleText": "收藏夹",
+				"usingComponents": {
+					"van-notice-bar": "/wxcomponents/vant/notice-bar/index"
+				}
+			}
+		},
+		{
+			"path": "pages/autonomy/index",
+			"style": {
+				"navigationBarTitleText": "自主出题",
+				"usingComponents": {},
+				"navigationBarBackgroundColor": "#243CF8"
+			}
+		},
+		{
 			"path": "pages/challengeList/index",
 			"style": {
 				"navigationBarTitleText": "挑战榜",
@@ -72,39 +117,11 @@
 			}
 		},
 		{
-			"path": "pages/index/index",
-			"style": {
-				"navigationBarTitleText": "uni-app",
-				"usingComponents": {
-					"van-button": "/wxcomponents/vant/button/index",
-					"van-action-sheet": "/wxcomponents/vant/action-sheet/index"
-				}
-			}
-		},
-		{
 			"path": "pages/answer/index",
 			"style": {
 				"navigationBarTitleText": "uni-app",
 				"usingComponents": {},
 				"disableScroll": true
-			}
-		},
-		{
-			"path": "pages/author/index",
-			"style": {
-				"navigationBarTitleText": "我的",
-				"usingComponents": {
-					"van-button": "/wxcomponents/vant/button/index"
-				}
-			}
-		},
-		{
-			"path": "pages/login/index",
-			"style": {
-				"navigationBarTitleText": "登录",
-				"usingComponents": {
-					"van-button": "/wxcomponents/vant/button/index"
-				}
 			}
 		}
 	],
@@ -121,7 +138,7 @@
 				"text": "刷题考试"
 			},
 			{
-				"pagePath": "pages/author/index",
+				"pagePath": "pages/user/index",
 				"iconPath": "static/tabbar/auth.png",
 				"selectedIconPath": "static/tabbar/auth-active.png",
 				"text": "个人中心"

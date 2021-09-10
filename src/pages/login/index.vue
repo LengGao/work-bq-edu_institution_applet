@@ -66,12 +66,6 @@ export default {
     },
     async getUserInfo(e) {
       const res = await this.wxGetUserInfo();
-      // .catch(() => {
-      //   uni.showToast({
-      //     icon: "error",
-      //     title: "授权失败",
-      //   });
-      // });
       if (res) {
         this.userInfo = res;
         uni.showToast({
