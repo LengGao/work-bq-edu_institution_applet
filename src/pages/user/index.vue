@@ -62,15 +62,7 @@ export default {
     };
   },
   onLoad() {},
-  methods: {
-    async getVersion() {
-      const data = {
-        appId: "wxb8322f5e02dbbc3d",
-      };
-      const res = await getVersion(data);
-      console.log(res);
-    },
-  },
+  methods: {},
 };
 </script>
 

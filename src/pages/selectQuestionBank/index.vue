@@ -4,10 +4,10 @@
       <view
         class="menu-item"
         :class="{ 'menu-item--active': activeIndex === index }"
-        v-for="(item, index) in menuList"
+        v-for="(item, index) in typeList"
         :key="index"
         @click="handleClick(index)"
-        >{{ item.title }}
+        >{{ item.category_name }}
       </view>
     </view>
     <scroll-view
@@ -16,37 +16,31 @@
       :scroll-into-view="toView"
       scroll-with-animation
     >
-      <Title color="#199fff" id="type-1">软考类</Title>
-      <view class="type-list">
-        <view class="type-list-item type-list-item--acitve"
-          >系统集成项目管理 ）</view
-        >
-        <view class="type-list-item">系统集成项目管理 工程师（中级）</view>
-        <view class="type-list-item">系统集成项目管理 工程师（中级）</view>
-        <view class="type-list-item">系统集成项目管理 工程师（中级）</view>
-        <view class="type-list-item">系统集成项目管理 工程师（中级）</view>
-      </view>
-      <Title color="#199fff" id="type-2">财经类</Title>
-      <view class="type-list">
-        <view class="type-list-item">系统集成项目管理 ）</view>
-        <view class="type-list-item">系统集成项目管理 工程师（中级）</view>
-        <view class="type-list-item">系统集成项目管理 工程师（中级）</view>
-        <view class="type-list-item">系统集成项目管理 工程师（中级）</view>
-        <view class="type-list-item">系统集成项目管理 工程师（中级）</view>
-      </view>
-      <Title color="#FDC400" id="type-3">财经类</Title>
-      <view class="type-list">
-        <view class="type-list-item">系统集成项目管理 ）</view>
-        <view class="type-list-item">系统集成项目管理 工程师（中级）</view>
-        <view class="type-list-item">系统集成项目管理 工程师（中级）</view>
-        <view class="type-list-item">系统集成项目管理 工程师（中级）</view>
-        <view class="type-list-item">系统集成项目管理 工程师（中级）</view>
-      </view>
+      <block v-for="(item, index) in typeList" :key="index">
+        <Title color="#199fff" :id="`type-${index}`">{{
+          item.category_name
+        }}</Title>
+        <view class="type-list">
+          <view
+            :class="{
+              'type-list-item--acitve':
+                questionBankInfo.question_bank_id === child.question_bank_id,
+            }"
+            @click="handleSelect(child)"
+            class="type-list-item"
+            v-for="child in item.question_bank"
+            :key="child.question_bank_id"
+            >{{ child.question_bank_name }}</view
+          >
+        </view>
+      </block>
     </scroll-view>
   </view>
 </template>
 <script>
 import Title from "@/components/title";
+import { getQuestionBankList } from "@/api/index";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "selectQuestionBank",
   components: {
@@ -54,33 +48,30 @@ export default {
   },
   data() {
     return {
-      menuList: [
-        {
-          title: "软考类",
-          id: "1",
-        },
-        {
-          title: "财经类",
-          id: "2",
-        },
-        {
-          title: "学历类",
-          id: "3",
-        },
-        {
-          title: "专项类",
-          id: "4",
-        },
-        {
-          title: "资格类",
-          id: "5",
-        },
-      ],
+      typeList: [],
       activeIndex: 0,
       toView: "",
     };
   },
+  onLoad() {
+    this.getQuestionBankList();
+  },
+  computed: {
+    ...mapGetters(["questionBankInfo"]),
+  },
   methods: {
+    ...mapActions(["setQuestionBankInfo"]),
+    async getQuestionBankList() {
+      const res = await getQuestionBankList();
+      console.log(res);
+      this.typeList = res.data;
+    },
+    handleSelect(data) {
+      this.setQuestionBankInfo(data);
+      uni.switchTab({
+        url: "/pages/index/index",
+      });
+    },
     handleClick(index) {
       this.activeIndex = index;
       this.toView = "type-" + index;

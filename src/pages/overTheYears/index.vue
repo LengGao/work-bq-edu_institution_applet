@@ -1,19 +1,20 @@
 <template>
-  <div class="over-years">
+  <scroll-view scroll-y class="over-years" @scrolltolower="onScrolltolower">
     <image class="b-img" src="../../static/over-year-background.png"></image>
     <view class="over-years-header"> </view>
     <view class="question-list">
-      <view class="question-list-item" v-for="item in 100" :key="item">
+      <view class="question-list-item" v-for="item in list" :key="item.id">
         <view class="question-info">
           <view class="question-info-title">
             <text class="iconfont">&#xe61e;</text>
-            <view class="title van-ellipsis"
-              >第2章 信息系统集成及集成及集成及集成及服务管理</view
-            >
+            <view class="title van-ellipsis">{{ item.chapter_name }}</view>
           </view>
           <view class="question-info-date">
-            <text class="date">2021-20-20</text>
-            <text><text class="number">90</text>人做过</text>
+            <text class="date">{{ item.create_time || "--" }}</text>
+            <text
+              ><text class="number">{{ item.people_num || 0 }}</text
+              >人做过</text
+            >
           </view>
         </view>
         <view>
@@ -21,15 +22,45 @@
         </view>
       </view>
     </view>
-  </div>
+    <NoData top="40%" v-if="!list.length" />
+  </scroll-view>
 </template>
 <script>
+import { getRealTestPapers } from "@/api/index";
+import NoData from "@/components/noData";
 export default {
   name: "overYears",
-
+  components: {
+    NoData,
+  },
+  data() {
+    return {
+      list: [],
+      total: 0,
+      page: 1,
+    };
+  },
+  onLoad() {
+    this.getRealTestPapers();
+  },
   methods: {
-    onClick(e) {
-      this.$emit("click", e);
+    onScrolltolower() {
+      if (this.list.length < this.total) {
+        this.page++;
+        this.getRealTestPapers();
+      }
+    },
+    async getRealTestPapers() {
+      const data = {
+        page: this.page,
+      };
+      const res = await getRealTestPapers(data);
+      if (this.page === 1) {
+        this.list = res.data.list;
+        this.total = res.data.total;
+      } else {
+        this.list = this.list.concat(res.data.list);
+      }
     },
   },
 };
@@ -37,6 +68,7 @@ export default {
 <style lang="less" scoped>
 @import "@/styles/var";
 .over-years {
+  height: 100%;
   .b-img {
     position: absolute;
     left: 0;

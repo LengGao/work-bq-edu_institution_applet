@@ -1,4 +1,6 @@
 import { getVersion } from "@/api/user";
+const appId = process.env.VUE_APP_APPID
+console.log(appId)
 const applet = {
     state: {
         appInfo: {}
@@ -11,9 +13,10 @@ const applet = {
     actions: {
         async getAppInfo({ commit }) {
             const data = {
-                appId: "wxb8322f5e02dbbc3d",
+                appId,
             };
             const res = await getVersion(data);
+            console.log(res)
             commit('SET_INFO', res.data)
         },
         setAppInfo({ commit }, data) {

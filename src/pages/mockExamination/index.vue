@@ -1,39 +1,73 @@
 <template>
-  <div class="mock-examination">
+  <scroll-view
+    scroll-y
+    @scrolltolower="onScrolltolower"
+    class="mock-examination"
+  >
     <image class="b-img" src="../../static/mock-background.png"></image>
     <view class="mock-examination-header"> </view>
     <view class="record-list">
       <view class="record-title">模拟考试历史记录</view>
-      <view class="record-list-item" v-for="item in 100" :key="item">
+      <view class="record-list-item" v-for="item in list" :key="item.id">
         <view class="record-info">
           <view class="record-info-title">
             <text class="iconfont">&#xe8aa;</text>
-            <view class="title van-ellipsis"
-              >第2章 信息系统集成及集成及集成及集成及服务管理</view
-            >
+            <view class="title van-ellipsis">{{ item.title }}</view>
           </view>
           <view class="record-info-date">
-            <text class="date">2020年3月20日14:30 </text>
-            <text>得分：<text class="number">90</text></text>
+            <text class="date">{{ item.create_time }}</text>
+            <text
+              >得分：<text class="number">{{ item.mark }}</text></text
+            >
           </view>
         </view>
         <view>
           <text class="iconfont">&#xe66b;</text>
         </view>
       </view>
+      <NoData top="50%" v-if="!list.length">暂无考试记录</NoData>
     </view>
     <view class="footer">
       <view class="btn-primary">智能组卷</view>
     </view>
-  </div>
+  </scroll-view>
 </template>
 <script>
+import { getMockExamHistory } from "@/api/index";
+import NoData from "@/components/noData";
 export default {
   name: "mockExamination",
-
+  components: {
+    NoData,
+  },
+  data() {
+    return {
+      list: [],
+      total: 0,
+      page: 1,
+    };
+  },
+  onLoad() {
+    this.getMockExamHistory();
+  },
   methods: {
-    onClick(e) {
-      this.$emit("click", e);
+    onScrolltolower() {
+      if (this.list.length < this.total) {
+        this.page++;
+        this.getMockExamHistory();
+      }
+    },
+    async getMockExamHistory() {
+      const data = {
+        page: this.page,
+      };
+      const res = await getMockExamHistory(data);
+      if (this.page === 1) {
+        this.list = res.data.list;
+        this.total = res.data.total;
+      } else {
+        this.list = this.list.concat(res.data.list);
+      }
     },
   },
 };
@@ -41,6 +75,8 @@ export default {
 <style lang="less" scoped>
 @import "@/styles/var";
 .mock-examination {
+  height: 100%;
+  box-sizing: border-box;
   padding-bottom: 240rpx;
   .b-img {
     position: absolute;

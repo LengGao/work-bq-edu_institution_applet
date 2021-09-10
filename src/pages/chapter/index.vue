@@ -1,39 +1,50 @@
 <template>
-  <div class="chapter">
+  <view class="chapter">
     <image class="b-img" src="../../static/chapter-background.png"></image>
     <view class="chapter-header">
       <view class="info-item">
-        <view class="info-item-value">5/18</view>
+        <view class="info-item-value">{{
+          statisticalData.completion_rate
+        }}</view>
         <view class="info-item-title">章节进度</view>
       </view>
       <view class="info-item">
-        <view class="info-item-value">224</view>
+        <view class="info-item-value">{{
+          statisticalData.answer_total_num
+        }}</view>
         <view class="info-item-title">做题数</view>
       </view>
       <view class="info-item">
-        <view class="info-item-value">68.5<text class="per-cent">%</text></view>
+        <view class="info-item-value"
+          >{{ statisticalData.correct_rate
+          }}<text class="per-cent">%</text></view
+        >
         <view class="info-item-title">准确率</view>
       </view>
     </view>
     <view class="chapter-container">
       <view class="chapter-list">
-        <view class="chapter-list-item" v-for="item in 100" :key="item">
+        <view
+          class="chapter-list-item"
+          v-for="item in chapterList"
+          :key="item.id"
+        >
           <view class="chapter-info">
             <view class="chapter-info-title">
               <text class="iconfont">&#xe7ed;</text>
-              <view class="title van-ellipsis"
-                >第2章 信息系统集成及集成及集成及集成及服务管理</view
-              >
+              <view class="title van-ellipsis">{{ item.chapter_name }}</view>
             </view>
             <view class="chapter-info-progress">
               <progress
                 class="progress"
-                percent="80"
+                :percent="item.chapters_progress"
                 color="#10AEFF"
                 active
                 stroke-width="3"
               />
-              <text class="number">50/90</text>
+              <text class="number"
+                >{{ item.answer_num }}/{{ item.topic_num }}</text
+              >
             </view>
           </view>
           <view>
@@ -42,15 +53,35 @@
         </view>
       </view>
     </view>
-  </div>
+    <NoData top="40%" v-if="!chapterList.length" />
+  </view>
 </template>
 <script>
+import { getChapterList } from "@/api/index";
+import NoData from "@/components/noData";
 export default {
   name: "chapter",
-
+  components: {
+    NoData,
+  },
+  data() {
+    return {
+      chapterList: [],
+      statisticalData: {
+        completion_rate: 0,
+        answer_total_num: 0,
+        correct_rate: 0,
+      },
+    };
+  },
+  onLoad() {
+    this.getChapterList();
+  },
   methods: {
-    onClick(e) {
-      this.$emit("click", e);
+    async getChapterList() {
+      const res = await getChapterList();
+      this.chapterList = res.data.list || [];
+      this.statisticalData = res.data.data || {};
     },
   },
 };

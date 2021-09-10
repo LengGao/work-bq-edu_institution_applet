@@ -1,5 +1,8 @@
 const getters = {
     organization_id: state => state.applet.appInfo.organization_id,
-    token: state => state.user.userInfo.token
+    appInfo: state => state.applet.appInfo,
+    token: state => state.user.userInfo.token,
+    questionBankInfo: state => state.user.questionBankInfo,
+    question_bank_id: state => state.user.questionBankInfo.question_bank_id
 }
 export default getters

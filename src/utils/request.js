@@ -4,6 +4,21 @@ const toLogin = () => {
         url: "/pages/login/index"
     });
 }
+const toQuestionBank = () => {
+    uni.redirectTo({
+        url: `/pages/selectQuestionBank/index`,
+    });
+}
+const toNoPermission = () => {
+    uni.redirectTo({
+        url: `/pages/noPermission/index`,
+    });
+}
+const errMap = {
+    '-1': toLogin,
+    '-2': toNoPermission,
+    '-3': toQuestionBank
+}
 const requset = (options) => new Promise((resolve, reject) => {
     if (options.auth !== false && !store.getters.token) {
         toLogin()
@@ -14,24 +29,24 @@ const requset = (options) => new Promise((resolve, reject) => {
     });
     uni.request({
         ...options,
+        data: Object.assign({
+            question_bank_id: store.getters.question_bank_id
+        }, options.data),
         header: Object.assign({
             token: store.getters.token
         }, options.header),
         url: process.env.VUE_APP_BASE_API + options.url,
         success: (response) => {
             const data = response.data
-            if (data.error_code === -1) {
-                toLogin()
-            }
             if (data.error_code !== 0) {
+                errMap[data.error_code] && errMap[data.error_code]()
                 uni.showToast({
                     icon: 'none',
                     title: data.message
                 })
-                console.log(111, data)
+                console.log('error', data)
                 reject(data)
             }
-            console.log(222, data)
             resolve(data)
         },
         fail: (error) => {

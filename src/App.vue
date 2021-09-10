@@ -1,9 +1,8 @@
 <script>
-import { getVersion } from "@/api/user";
-
+import { mapActions } from "vuex";
 export default {
   onLaunch: function () {
-    this.getVersion();
+    this.getAppInfo();
     console.log("App Launch");
   },
   onShow: function () {
@@ -13,13 +12,7 @@ export default {
     console.log("App Hide");
   },
   methods: {
-    async getVersion() {
-      const data = {
-        appId: "wxb8322f5e02dbbc3d",
-      };
-      const res = await getVersion(data);
-      console.log(res);
-    },
+    ...mapActions(["getAppInfo"]),
   },
 };
 </script>

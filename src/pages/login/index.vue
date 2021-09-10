@@ -1,9 +1,7 @@
 <template>
   <view class="lgoin">
     <view class="logo">
-      <image
-        src="https://img2.baidu.com/it/u=3355464299,584008140&fm=26&fmt=auto&gp=0.jpg"
-      />
+      <image :src="appInfo.logo" />
     </view>
     <view class="tips">
       <view class="tips-title">申请获取以下权限</view>
@@ -36,9 +34,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["organization_id"]),
+    ...mapGetters(["organization_id", "appInfo"]),
   },
   onLoad() {
+    console.log(11111);
     this.wxLogin();
   },
   methods: {
@@ -59,12 +58,13 @@ export default {
       const res = await getSign(data);
       if (res.error_code === 0) {
         this.setUserInfo(res.data);
-        uni.redirectTo({
+        uni.switchTab({
           url: "/pages/index/index",
         });
       }
     },
     async getUserInfo(e) {
+      console.log(111111111);
       const res = await this.wxGetUserInfo();
       if (res) {
         this.userInfo = res;

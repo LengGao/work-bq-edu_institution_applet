@@ -1,21 +1,28 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "题库",
+				"usingComponents": {
+					"van-button": "/wxcomponents/vant/button/index",
+					"van-action-sheet": "/wxcomponents/vant/action-sheet/index"
+				}
+			}
+		},
+		{
+			"path": "pages/challengeList/index",
+			"style": {
+				"navigationBarTitleText": "挑战榜",
+				"usingComponents": {}
+			}
+		},
+		{
 			"path": "pages/login/index",
 			"style": {
 				"navigationBarTitleText": "登录",
 				"usingComponents": {
 					"van-button": "/wxcomponents/vant/button/index"
-				}
-			}
-		},
-		{
-			"path": "pages/index/index",
-			"style": {
-				"navigationBarTitleText": "uni-app",
-				"usingComponents": {
-					"van-button": "/wxcomponents/vant/button/index",
-					"van-action-sheet": "/wxcomponents/vant/action-sheet/index"
 				}
 			}
 		},
@@ -29,12 +36,19 @@
 			}
 		},
 		{
-			"path": "pages/favorites/index",
+			"path": "pages/wrongQuestion/index",
 			"style": {
-				"navigationBarTitleText": "收藏夹",
+				"navigationBarTitleText": "错题集",
 				"usingComponents": {
 					"van-notice-bar": "/wxcomponents/vant/notice-bar/index"
 				}
+			}
+		},
+		{
+			"path": "pages/favorites/index",
+			"style": {
+				"navigationBarTitleText": "收藏夹",
+				"usingComponents": {}
 			}
 		},
 		{
@@ -43,13 +57,6 @@
 				"navigationBarTitleText": "自主出题",
 				"usingComponents": {},
 				"navigationBarBackgroundColor": "#243CF8"
-			}
-		},
-		{
-			"path": "pages/challengeList/index",
-			"style": {
-				"navigationBarTitleText": "挑战榜",
-				"usingComponents": {}
 			}
 		},
 		{
@@ -112,7 +119,7 @@
 		{
 			"path": "pages/selectQuestionBank/index",
 			"style": {
-				"navigationBarTitleText": "uni-app",
+				"navigationBarTitleText": "题库列表",
 				"usingComponents": {}
 			}
 		},
@@ -122,6 +129,13 @@
 				"navigationBarTitleText": "uni-app",
 				"usingComponents": {},
 				"disableScroll": true
+			}
+		},
+		{
+			"path": "pages/noPermission/index",
+			"style": {
+				"navigationBarTitleText": "无权限",
+				"usingComponents": {}
 			}
 		}
 	],

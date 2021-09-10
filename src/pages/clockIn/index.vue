@@ -9,28 +9,38 @@
       <view class="card">
         <view class="clock-in-data">
           <view class="clock-in-data-item">
-            <view class="value">12<text class="unit">天</text></view>
+            <view class="value"
+              >{{ clockData.day_num }}<text class="unit">天</text></view
+            >
             <view class="title">累计打卡天数</view>
           </view>
           <view class="clock-in-data-item">
-            <view class="value">15:30</view>
+            <view class="value">{{ clockData.use_time }}</view>
             <view class="title">平均打卡用时</view>
           </view>
           <view class="clock-in-data-item">
-            <view class="value">68<text class="unit">人</text></view>
+            <view class="value"
+              >{{ clockData.total }}<text class="unit">人</text></view
+            >
             <view class="title">今日打卡人数</view>
           </view>
         </view>
         <view class="card-center">
           <view class="clock-in-btn">
-            <!-- <text>打卡</text> -->
-            <text class="title">正确率</text>
-            <text class="value">60<text class="unit">%</text></text>
+            <view v-if="clockData.is_clock">
+              <text class="title">正确率</text>
+              <text class="value"
+                >{{ clockData.correct_rate }}<text class="unit">%</text></text
+              >
+            </view>
+            <text v-else>打卡</text>
           </view>
         </view>
         <view class="card-bottom">
-          <!-- <view>xxxxx每天陪你进步一点点~~</view> -->
-          <view class="link">今天打卡成功，查看报告解析>>></view>
+          <view class="link" v-if="clockData.is_clock"
+            >今天打卡成功，查看报告解析>>></view
+          >
+          <view v-else>{{ appInfo.app_name }}每天陪你进步一点点~~</view>
         </view>
       </view>
       <view class="desc">
@@ -43,54 +53,37 @@
   </div>
 </template>
 <script>
+import { getClockDetails } from "@/api/index";
+import { mapGetters } from "vuex";
+import { getNowFormatDate, getCurrentDay } from "@/utils/index";
 export default {
   name: "clockIn",
+  data() {
+    return {
+      getNowFormatDate,
+      getCurrentDay,
+      clockData: {
+        is_clock: 0,
+        correct_rate: "0.00",
+        day_num: 0,
+        use_time: "00:00",
+        total: 0,
+      },
+    };
+  },
+  onLoad() {
+    this.getClockDetails();
+  },
+  computed: {
+    ...mapGetters(["appInfo"]),
+  },
   methods: {
+    async getClockDetails() {
+      const res = await getClockDetails();
+      this.clockData = res.data;
+    },
     onClick(e) {
       this.$emit("click", e);
-    },
-    getCurrentDay() {
-      var myDate = new Date();
-      var days = myDate.getDay();
-      switch (days) {
-        case 1:
-          days = "星期一";
-          break;
-        case 2:
-          days = "星期二";
-          break;
-        case 3:
-          days = "星期三";
-          break;
-        case 4:
-          days = "星期四";
-          break;
-        case 5:
-          days = "星期五";
-          break;
-        case 6:
-          days = "星期六";
-          break;
-        case 0:
-          days = "星期日";
-          break;
-      }
-      return days;
-    },
-    getNowFormatDate() {
-      var date = new Date();
-      var seperator1 = "/";
-      var year = date.getFullYear();
-      var month = date.getMonth() + 1;
-      var strDate = date.getDate();
-      if (month >= 1 && month <= 9) {
-        month = "0" + month;
-      }
-      if (strDate >= 0 && strDate <= 9) {
-        strDate = "0" + strDate;
-      }
-      var currentdate = year + seperator1 + month + seperator1 + strDate;
-      return currentdate;
     },
   },
 };

@@ -2,7 +2,7 @@
   <div class="brush-question-challenge">
     <image class="challenge-logo" src="../../static/shuatitiaozhan.png" />
     <view class="challenge-btns">
-      <view class="btn-primary plain">刷题挑战榜</view>
+      <view class="btn-primary plain" @click="toRankList">刷题挑战榜</view>
       <view class="btn-primary">开始挑战赛</view>
     </view>
     <view class="challenge-desc">
@@ -16,10 +16,11 @@
 <script>
 export default {
   name: "brushQuestionChallenge",
-  props: {
-    color: {
-      type: String,
-      default: "#999",
+  methods: {
+    toRankList() {
+      uni.redirectTo({
+        url: `/pages/challengeList/index`,
+      });
     },
   },
 };

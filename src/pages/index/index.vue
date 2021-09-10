@@ -1,49 +1,57 @@
 <template>
   <view class="index">
-    <view class="header">
+    <view class="header" @click="toType">
       <text class="iconfont">&#xe64f;</text>
-      <text class="title">系统集成项目管理工程师（中级）</text>
+      <text class="title">{{ questionBankInfo.question_bank_name }}</text>
     </view>
-    <view class="card card--primary">
+    <view class="card card--primary" @click="linkTo('clockIn')">
       <view class="card-title">每日打卡，为梦想持续加码</view>
       <view class="card-content">
-        <view class="item" v-for="(item, index) in clockInData" :key="index">
-          <view class="item-value">{{ item.value }}</view>
+        <view class="item" v-for="(item, index) in clockInList" :key="index">
+          <view class="item-value"
+            >{{ item.value }}
+            <text v-if="index === 2 && item.value !== '--'" class="unit"
+              >%</text
+            ></view
+          >
           <view class="item-title">{{ item.name }}</view>
         </view>
       </view>
       <view class="card-footer">
         <view class="card-footer-left">
           <image
-            src="https://img0.baidu.com/it/u=1689178061,3688740446&fm=11&fmt=auto&gp=0.jpg"
+            v-for="(item, index) in clockData.list"
+            :key="index"
+            :src="item.cover"
           />
-          <image
-            src="https://img1.baidu.com/it/u=788474068,812707478&fm=253&fmt=auto&app=120&f=JPEG?w=280&h=180"
-          />
-          <image
-            src="https://img0.baidu.com/it/u=1631379791,2150813757&fm=253&fmt=auto&app=120&f=JPEG?w=899&h=500"
-          />
-          <text>9999人正在参与</text>
+
+          <text>{{ clockData.total }}人正在参与</text>
         </view>
         <view class="card-footer-right">
-          <van-button size="small" type="primary">今日未打卡</van-button>
+          <van-button size="small" type="primary" v-if="!clockData.is_clock"
+            >今日未打卡</van-button
+          >
         </view>
       </view>
     </view>
-    <view class="card">
-      <view class="card-title">每日打卡，为梦想持续加码</view>
+    <view class="card" @click="linkTo('chapter')">
+      <view class="card-title">章节练习，海量优质习题</view>
       <view class="card-content">
         <view class="question-item">
           <view class="question-item-title">章节进度</view>
-          <view class="question-item-value">15/30</view>
+          <view class="question-item-value">{{
+            practice.completion_rate
+          }}</view>
         </view>
         <view class="question-item">
           <view class="question-item-title">做题总数</view>
-          <view class="question-item-value">9986</view>
+          <view class="question-item-value">{{
+            practice.answer_total_num
+          }}</view>
         </view>
         <view class="question-item">
           <view class="question-item-title">准确率</view>
-          <view class="question-item-value">55.5%</view>
+          <view class="question-item-value">{{ practice.correct_rate }}%</view>
         </view>
         <view class="question-item img">
           <image class="icon-zj" src="../../static/icon-zjlx.png" />
@@ -52,7 +60,10 @@
       </view>
     </view>
     <view class="question-entry">
-      <view class="question-entry-item question-entry-item--large">
+      <view
+        class="question-entry-item question-entry-item--large"
+        @click="linkTo('overTheYears')"
+      >
         <image class="icon" src="../../static/icon-lnzt.png" />
         <image class="nail" src="../../static/icon-lq.png" />
         <view class="info">
@@ -60,7 +71,10 @@
           <view class="info-desc">全真考场试题</view>
         </view>
       </view>
-      <view class="question-entry-item question-entry-item--large mnks">
+      <view
+        class="question-entry-item question-entry-item--large mnks"
+        @click="linkTo('mockExamination')"
+      >
         <image class="icon" src="../../static/icon-mnks.png" />
         <image class="nail" src="../../static/icon-zy.png" />
         <view class="info">
@@ -68,19 +82,22 @@
           <view class="info-desc">智能组卷评测</view>
         </view>
       </view>
-      <view class="question-entry-item m-l">
+      <view
+        class="question-entry-item m-l"
+        @click="linkTo('brushQuestionChallenge')"
+      >
         <image class="icon" src="../../static/icon-sttz.png" />
         <view class="title"> 刷题挑战</view>
       </view>
-      <view class="question-entry-item">
+      <view class="question-entry-item" @click="linkTo('autonomy')">
         <image class="icon" src="../../static/icon-zzct.png" />
         <view class="title"> 自主出题</view>
       </view>
-      <view class="question-entry-item">
+      <view class="question-entry-item" @click="linkTo('favorites')">
         <image class="icon" src="../../static/icon-scj.png" />
         <view class="title"> 收藏夹</view>
       </view>
-      <view class="question-entry-item m-r">
+      <view class="question-entry-item m-r" @click="linkTo('wrongQuestion')">
         <image class="icon" src="../../static/icon-ctj.png" />
         <view class="title"> 错题集</view>
       </view>
@@ -95,7 +112,8 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
+import { getPanelStatistical } from "@/api/index";
 export default {
   data() {
     return {
@@ -108,30 +126,73 @@ export default {
           name: "2",
         },
       ],
-      clockInData: [
+      clockInList: [
         {
           name: "打卡天数",
-          value: 169,
+          value: 0,
         },
         {
-          name: "答题总数",
-          value: 9999,
+          name: "平均时长",
+          value: "00:00",
         },
         {
           name: "今日正确率",
-          value: 98.99,
+          value: 0,
         },
       ],
+      clockData: {
+        total: 0,
+        list: [],
+      },
+      practice: {
+        completion_rate: 0,
+        answer_total_num: 0,
+        correct_rate: 0,
+      },
     };
   },
+  onShow() {
+    this.hasQuestionId();
+  },
   onLoad() {
-    this.getAppInfo();
+    uni.setNavigationBarTitle({
+      title: this.appInfo.app_name,
+    });
   },
   computed: {
-    ...mapGetters(["organization_id"]),
+    ...mapGetters(["appInfo", "questionBankInfo"]),
   },
   methods: {
-    ...mapActions(["getAppInfo"]),
+    hasQuestionId() {
+      if (!this.questionBankInfo.question_bank_id) {
+        this.toType();
+      } else {
+        this.getPanelStatistical();
+      }
+    },
+    async getPanelStatistical() {
+      const data = {
+        question_bank_id: this.questionBankInfo.question_bank_id,
+      };
+      const res = await getPanelStatistical(data);
+      const clock = res.data.clock;
+      this.clockInList[0].value = clock.day_num;
+      this.clockInList[1].value = clock.use_time;
+      this.clockInList[2].value =
+        clock.is_clock === 1 ? clock.correct_rate : "--";
+      this.clockData = clock;
+      this.practice = res.data.practice || {};
+    },
+    linkTo(path) {
+      uni.navigateTo({
+        url: `/pages/${path}/index`,
+      });
+    },
+    toType() {
+      uni.redirectTo({
+        url: `/pages/selectQuestionBank/index`,
+      });
+    },
     openSheet() {
       this.show = true;
     },
@@ -196,6 +257,9 @@ export default {
         flex-shrink: 0;
         text-align: center;
         position: relative;
+        .unit {
+          font-size: 24rpx;
+        }
         &-title {
           color: #a3d9ff;
           font-size: 24rpx;
@@ -215,8 +279,9 @@ export default {
         }
       }
       .question-item {
-        &:not(:last-child) {
-          margin-right: 50rpx;
+        flex: 1;
+        &:last-child {
+          margin-left: 20rpx;
         }
         &-title {
           color: #999;
@@ -228,7 +293,6 @@ export default {
         }
         &.img {
           position: relative;
-          padding-left: 50rpx;
           text-align: center;
           &:active {
             opacity: 0.8;

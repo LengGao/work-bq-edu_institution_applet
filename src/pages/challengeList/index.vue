@@ -1,9 +1,9 @@
 <template>
-  <div class="challenge-list">
+  <scroll-view scroll-y class="challenge-list" @scrolltolower="onScrolltolower">
     <image class="b-img" src="../../static/trophy.png"></image>
     <view class="challenge-list-header">
       <view class="title">刷题挑战榜</view>
-      <view class="date">更新时间：2020-04-27 00:00</view>
+      <view class="date">更新时间：{{ getNowFormatDate("-") }} 00:00</view>
     </view>
     <view class="challenge-list-container">
       <view class="list-header">
@@ -13,7 +13,11 @@
         <view class="timeuse">用时</view>
       </view>
       <view class="list-content">
-        <view class="list-item" v-for="(item, index) in 100" :key="item">
+        <view
+          class="list-item"
+          v-for="(item, index) in rankList"
+          :key="item.uid"
+        >
           <view class="ranking">
             <image
               class="icon"
@@ -33,56 +37,100 @@
             <text v-else class="text">{{ index + 1 }}</text>
           </view>
           <view class="name">
-            <image
-              class="avatar"
-              src="https://tinypng.com/images/panda-chewing.png"
-            ></image>
-            <text class="text">李小南</text>
+            <image class="avatar" :src="item.user_img"></image>
+            <text class="text van-ellipsis">{{ item.nickname }}</text>
           </view>
-          <view class="score">得分</view>
-          <view class="timeuse">用时</view>
+          <view class="score">{{ item.mark }}</view>
+          <view class="timeuse">{{ item.use_time }}</view>
         </view>
       </view>
     </view>
     <view class="challenge-list-footer">
       <view class="title">我的成绩</view>
       <view class="info">
-        <image
-          class="avatar"
-          src="https://tinypng.com/images/panda-chewing.png"
-        ></image>
+        <image class="avatar" :src="selfData.user_img"></image>
         <view>
-          <view class="user-name">张小北</view>
+          <view class="user-name">{{ selfData.nickname }}</view>
           <view class="user-value">
-            <!-- <text>今天还没任何战绩</text> -->
-            <text>
+            <text v-if="selfData.is_challenge">
               <text>排名:</text>
-              <text class="number">20</text>
+              <text class="number">{{ selfData.rank }}</text>
               <text>得分:</text>
-              <text class="number">72</text>
+              <text class="number">{{ selfData.mark }}</text>
             </text>
+            <text v-else>今天还没任何战绩</text>
           </view>
         </view>
       </view>
-      <view class="btn-primary">开始挑战</view>
+      <view class="btn-primary">{{
+        selfData.is_challenge ? "继续挑战" : "开始挑战"
+      }}</view>
     </view>
-  </div>
+    <NoData top="50%" v-if="!rankList.length" />
+  </scroll-view>
 </template>
 <script>
+import { getRankList, getSelfAchievement } from "@/api/index";
+import { getNowFormatDate } from "@/utils/index";
+import NoData from "@/components/noData";
 export default {
   name: "challengeList",
-
+  components: {
+    NoData,
+  },
+  data() {
+    return {
+      getNowFormatDate,
+      rankList: [],
+      selfData: {
+        nickname: "",
+        user_img: "",
+        is_challenge: 0,
+        mark: 0,
+        rank: 0,
+      },
+      page: 1,
+      total: 0,
+    };
+  },
+  onLoad() {
+    this.getRankList();
+    this.getSelfAchievement();
+  },
   methods: {
-    onClick(e) {
-      this.$emit("click", e);
+    onScrolltolower() {
+      if (this.rankList.length < this.total) {
+        this.page++;
+        this.getRankList();
+      }
+    },
+    async getSelfAchievement() {
+      const res = await getSelfAchievement();
+      this.selfData = res.data;
+    },
+    async getRankList() {
+      const data = {
+        page: this.page,
+      };
+      const res = await getRankList(data);
+      if (this.page === 1) {
+        this.rankList = res.data.list;
+        this.total = res.data.total;
+      } else {
+        this.rankList = this.rankList.concat(res.data.list);
+      }
     },
   },
 };
 </script>
 <style lang="less" scoped>
 @import "@/styles/var";
+page {
+  overflow: hidden;
+  box-sizing: border-box;
+}
 .challenge-list {
-  padding-bottom: 180rpx;
+  height: 100%;
   .b-img {
     position: absolute;
     right: 0;
@@ -135,12 +183,14 @@ export default {
       text-align: left;
       display: flex;
       align-items: center;
+      overflow: hidden;
       .avatar {
         width: 80rpx;
         height: 80rpx;
         background-color: #ccc;
         .radius();
         margin-right: 20rpx;
+        flex-shrink: 0;
       }
     }
     .score {
@@ -150,6 +200,9 @@ export default {
       flex: 2;
     }
     .list-content {
+      padding-bottom: 122rpx;
+      padding-bottom: calc(122rpx + constant(safe-area-inset-bottom));
+      padding-bottom: calc(122rpx + env(safe-area-inset-bottom));
       .list-item {
         display: flex;
         align-items: center;
@@ -174,7 +227,7 @@ export default {
     padding-bottom: env(safe-area-inset-bottom);
     .title {
       color: @primary;
-      width: 62rpx;
+      width: 64rpx;
       margin-left: 30rpx;
     }
     .info {

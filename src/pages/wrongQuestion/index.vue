@@ -1,11 +1,16 @@
 <template>
-  <view class="favorites">
+  <view class="wrong-question">
+    <van-notice-bar left-icon="warning-o" text="答对一次后自动移除错题" />
     <scroll-view
       scroll-y
-      class="favorites-list"
+      class="wrong-question-list"
       @scrolltolower="onScrolltolower"
     >
-      <view class="favorites-list-item" v-for="item in list" :key="item.id">
+      <view
+        class="wrong-question-list-item"
+        v-for="item in list"
+        :key="item.id"
+      >
         <view class="title"
           >{{ item.chapter_name }}（{{ item.topic_num }}）</view
         >
@@ -19,10 +24,10 @@
   </view>
 </template>
 <script>
-import { getFavoritesList } from "@/api/index";
 import NoData from "@/components/noData";
+import { getFavoritesList } from "@/api/index";
 export default {
-  name: "favorites",
+  name: "wrongQuestion",
   components: {
     NoData,
   },
@@ -45,7 +50,7 @@ export default {
     },
     async getFavoritesList() {
       const data = {
-        is_collection: 1,
+        is_collection: 0,
         page: this.page,
       };
       const res = await getFavoritesList(data);
@@ -61,13 +66,10 @@ export default {
 </script>
 <style lang="less" scoped>
 @import "@/styles/var";
-page {
-  overflow: hidden;
-}
-.favorites {
+.wrong-question {
   height: 100%;
-  .favorites-list {
-    height: 100%;
+  .wrong-question-list {
+    height: calc(100% - 40px);
     &-item {
       padding: 0 30rpx;
       height: 100rpx;
