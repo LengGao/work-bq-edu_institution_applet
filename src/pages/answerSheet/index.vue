@@ -2,81 +2,34 @@
   <view class="answer-sheet">
     <Header />
     <view class="content">
-      <Title>单选题</Title>
-      <view class="circular-list">
-        <Circular>1</Circular>
-        <Circular type="primary">2</Circular>
-        <Circular type="success">3</Circular>
-        <Circular type="error">4</Circular>
-        <Circular>5</Circular>
-        <Circular>6</Circular>
-      </view>
-      <Title>多选题</Title>
-      <view class="circular-list">
-        <Circular>1</Circular>
-        <Circular type="primary">2</Circular>
-        <Circular type="success">3</Circular>
-        <Circular type="error">4</Circular>
-        <Circular>5</Circular>
-        <Circular>6</Circular>
-        <Circular type="success">3</Circular>
-        <Circular type="error">4</Circular>
-        <Circular>5</Circular><Circular type="success">3</Circular>
-        <Circular type="error">4</Circular>
-        <Circular>5</Circular><Circular type="success">3</Circular>
-        <Circular type="error">4</Circular>
-        <Circular>5</Circular>
-      </view>
-      <Title>多选题</Title>
-      <view class="circular-list">
-        <Circular>1</Circular>
-        <Circular type="primary">2</Circular>
-        <Circular type="success">3</Circular>
-        <Circular type="error">4</Circular>
-        <Circular>5</Circular>
-        <Circular>6</Circular>
-        <Circular type="success">3</Circular>
-        <Circular type="error">4</Circular>
-        <Circular>5</Circular><Circular type="success">3</Circular>
-        <Circular type="error">4</Circular>
-        <Circular>5</Circular><Circular type="success">3</Circular>
-        <Circular type="error">4</Circular>
-        <Circular>5</Circular>
-      </view>
-      <Title>多选题</Title>
-      <view class="circular-list">
-        <Circular>1</Circular>
-        <Circular type="primary">2</Circular>
-        <Circular type="success">3</Circular>
-        <Circular type="error">4</Circular>
-        <Circular>5</Circular>
-        <Circular>6</Circular>
-        <Circular type="success">3</Circular>
-        <Circular type="error">4</Circular>
-        <Circular>5</Circular><Circular type="success">3</Circular>
-        <Circular type="error">4</Circular>
-        <Circular>5</Circular><Circular type="success">3</Circular>
-        <Circular type="error">4</Circular>
-        <Circular>5</Circular>
-      </view>
-      <Title>多选题</Title>
-      <view class="circular-list">
-        <Circular>1</Circular>
-        <Circular type="primary">2</Circular>
-        <Circular type="success">3</Circular>
-        <Circular type="error">4</Circular>
-        <Circular>5</Circular>
-        <Circular>6</Circular>
-        <Circular type="success">3</Circular>
-        <Circular type="error">4</Circular>
-        <Circular>5</Circular><Circular type="success">3</Circular>
-        <Circular type="error">4</Circular>
-        <Circular>5</Circular><Circular type="success">3</Circular>
-        <Circular type="error">4</Circular>
-        <Circular>5</Circular>
-      </view>
+      <block v-for="(item, type) in listData" :key="type">
+        <Title>{{ typeMap[type] }}</Title>
+        <view class="circular-list">
+          <!-- 对案例题特殊处理 -->
+          <block v-if="type == 7">
+            <block v-for="parent in item" :key="parent.id">
+              <Circular
+                @click="onSelect(parent.index, index)"
+                v-for="(child, index) in parent.child"
+                :key="child.id"
+                :type="statusMap[child.answer_status]"
+                >{{ parent.index }}-{{ index + 1 }}</Circular
+              >
+            </block>
+          </block>
+          <block v-else>
+            <Circular
+              @click="onSelect(question.index)"
+              v-for="question in item"
+              :key="question.id"
+              :type="statusMap[question.answer_status]"
+              >{{ question.index }}</Circular
+            >
+          </block>
+        </view>
+      </block>
     </view>
-    <Footer class="footer" />
+    <Footer class="footer" :model="model" @click="handleClick" />
   </view>
 </template>
 <script>
@@ -84,6 +37,7 @@ import Header from "./components/header.vue";
 import Title from "@/components/title";
 import Circular from "@/components/circular";
 import Footer from "./components/footer.vue";
+import { getQuestionBoard } from "@/api/index";
 export default {
   name: "answerSheet",
   components: {
@@ -92,8 +46,53 @@ export default {
     Circular,
     Footer,
   },
-  onLoad({ id }) {
-    console.log(id);
+  data() {
+    return {
+      model: 1, // 1 刷题 2答题
+      listData: {},
+      statusMap: {
+        "-1": "none",
+        0: "error",
+        1: "success",
+      },
+      typeMap: {
+        1: "单选题",
+        2: "多选题",
+        3: "判断题",
+        4: "不定项题",
+        5: "填空题",
+        6: "简答题",
+        7: "案例题",
+      },
+    };
+  },
+  onLoad({ logId, model = 1 }) {
+    console.log(logId);
+    this.model = model;
+    this.getQuestionBoard(logId);
+  },
+  methods: {
+    onSelect(number, caseIndex) {
+      const pages = getCurrentPages(); //获取所有页面栈实例列表
+      const prevPage = pages[pages.length - 2]; //上一页页面实例
+      const vm = prevPage.$vm;
+      // 把选中的赋值
+      vm.currentIndex = number - 1;
+      vm.caseIndex = caseIndex;
+      vm.duration = 300;
+      this.goBack();
+    },
+    handleClick() {
+      this.goBack();
+    },
+    goBack() {
+      uni.navigateBack();
+    },
+    async getQuestionBoard(log_id) {
+      const data = { log_id };
+      const res = await getQuestionBoard(data);
+      this.listData = res.data;
+    },
   },
 };
 </script>

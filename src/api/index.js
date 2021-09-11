@@ -79,3 +79,20 @@ export const getFavoritesList = (data) => {
         data,
     })
 }
+// 生成章节练习题目
+export const createPractice = (data) => {
+    return requset({
+        url: 'practice/create',
+        method: 'get',
+        data,
+        loading: true
+    })
+}
+// 答题卡
+export const getQuestionBoard = (data) => {
+    return requset({
+        url: '/Topic/questionBoard',
+        method: 'get',
+        data,
+    })
+}

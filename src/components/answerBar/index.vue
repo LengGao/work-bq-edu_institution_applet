@@ -1,19 +1,20 @@
 <template>
   <view class="answer-bar">
     <view class="answer-bar-item" @click="onClickPrev">
-      <view class="iconfont">&#xe61d;</view>
+      <text class="iconfont">&#xe61d;</text>
       <view class="bar-text">上一题</view>
     </view>
     <view class="answer-bar-item" @click="onClickCard">
-      <view class="iconfont">&#xe6b0;</view>
+      <text class="iconfont">&#xe6b0;</text>
       <view class="bar-text">答题卡</view>
     </view>
     <view class="answer-bar-item" @click="onClickCollect">
-      <view class="iconfont">&#xe630;</view>
+      <text class="iconfont" v-show="isCollection">&#xe601;</text>
+      <text class="iconfont" v-show="!isCollection">&#xe630;</text>
       <view class="bar-text">收藏</view>
     </view>
     <view class="answer-bar-item" @click="onClickNext">
-      <view class="iconfont">&#xe65c;</view>
+      <text class="iconfont">&#xe65c;</text>
       <view class="bar-text">下一题</view>
     </view>
   </view>
@@ -21,6 +22,12 @@
 <script>
 export default {
   name: "answerBar",
+  props: {
+    isCollection: {
+      type: Boolean,
+      default: false,
+    },
+  },
   methods: {
     onClickNext(e) {
       this.$emit("next", e);

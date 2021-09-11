@@ -54,6 +54,7 @@ export default {
   border-radius: 10rpx;
   display: flex;
   margin-bottom: 30rpx;
+  align-items: center;
   &-label {
     width: 44rpx;
     height: 44rpx;

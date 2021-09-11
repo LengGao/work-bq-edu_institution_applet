@@ -1,27 +1,31 @@
 <template>
   <div class="completion">
     <view class="quetion-content">
-      奋达科技 放大卡积分的考虑是否将奋达科技放大卡积分
-      的考虑是否将奋达科技放大卡积分的考虑是否将奋达
-      科技放大卡积分的考虑是否将奋达科技放达科技放大卡积分的考虑是否将奋达
+      <u-parse :content="options.topic_description" />
     </view>
     <IOption
-      v-for="(item, index) in answerData"
+      v-for="(item, index) in inputItem"
       :key="index"
       :label="index + 1 + ''"
       :status="item.status"
     >
-      <input type="text" v-model="item.value" placeholder="请输入" />
+      <input
+        type="text"
+        :disabled="!!correctAnswer"
+        v-model="item.value"
+        placeholder="请输入"
+      />
     </IOption>
     <AnswerEye @change="handleEyeChange" />
     <AnswerAnalysis
-      v-if="answer.length"
-      :user-answer="userAnswerText"
-      :answer="answerText"
+      v-if="correctAnswer"
+      :correct-answer="correctAnswer"
+      :desc="options.topic_analysis"
     />
   </div>
 </template>
 <script>
+import uParse from "@/components/gaoyia-parse/parse.vue";
 import AnswerAnalysis from "@/components/answerAnalysis";
 import Select from "@/components/select";
 import AnswerEye from "@/components/answerEye";
@@ -33,55 +37,33 @@ export default {
     Select,
     AnswerEye,
     IOption,
+    uParse,
   },
-  props: {},
-
+  props: {
+    options: {
+      type: Object,
+      default: () => ({
+        option: [],
+        topic_description: "",
+      }),
+    },
+  },
   data() {
     return {
       sequence: true,
-      answer: [],
-      checked: [],
-      answerData: [
-        {
-          value: "",
-          status: "",
-        },
-        {
-          value: "",
-          status: "",
-        },
-        {
-          value: "",
-          status: "",
-        },
-        {
-          value: "",
-          status: "",
-        },
-      ],
-      letter: {
-        0: "A",
-        1: "B",
-        2: "C",
-        3: "D",
-        4: "E",
-        5: "F",
-        6: "G",
-        7: "H",
-        8: "R",
-        9: "J",
-      },
-      userAnswerText: "",
-      answerText: "",
+      correctAnswer: "",
+      inputItem: [],
     };
   },
   watch: {
-    answer(val) {
+    correctAnswer(val) {
       if (val.length) {
+        // 正确答案转成数组
+        const correctAnswerArr = val.split(",");
         // 按序匹配答案
         if (this.sequence) {
-          this.answerData.forEach((item, index) => {
-            if (this.answerData[index].value === this.answer[index]) {
+          this.inputItem.forEach((item, index) => {
+            if (this.inputItem[index].value === correctAnswerArr[index]) {
               item.status = "success";
             } else {
               item.status = "error";
@@ -89,8 +71,10 @@ export default {
           });
         } else {
           // 不用按序
-          this.answerData.forEach((item) => {
-            if (this.answer.includes(item.value)) {
+          this.inputItem.forEach((item) => {
+            if (correctAnswerArr.includes(item.value)) {
+              // 同样的答案只能对一个
+              correctAnswerArr.splice(correctAnswerArr.indexOf(item.value), 1);
               item.status = "success";
             } else {
               item.status = "error";
@@ -98,22 +82,28 @@ export default {
           });
         }
       } else {
-        this.answerData.forEach((item) => {
+        this.inputItem.forEach((item) => {
           item.status = "";
         });
       }
     },
   },
+  created() {
+    this.inputItem = this.options.option.map((item) => ({
+      ...item,
+      value: "",
+      status: "",
+    }));
+  },
   methods: {
     handleEyeChange(val) {
       if (val) {
-        this.answer = ["1", "2"];
-        this.getAnswerText();
+        this.correctAnswer = this.options.topic_answer;
+        console.log(this.inputItem);
       } else {
-        this.answer = [];
+        this.correctAnswer = "";
       }
     },
-    getAnswerText() {},
   },
 };
 </script>

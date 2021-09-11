@@ -1,6 +1,10 @@
 <template>
   <view class="answer">
-    <AnswerHead type="1" total="30" current="1" />
+    <AnswerHead
+      :type="questionList[currentIndex].topic_type"
+      :total="total"
+      :current="currentIndex + 1"
+    />
     <!-- <view class="output output--hidden"> -->
     <!-- <Single /> -->
     <!-- <Multiple /> -->
@@ -9,16 +13,55 @@
     <!-- <Completion /> -->
     <!-- <Short /> -->
     <!-- </view> -->
-    <swiper class="swiper" duration="300">
-      <swiper-item class="swiper-item swiper-item--hidden">
+    <swiper
+      class="swiper"
+      :duration="duration"
+      @change="onSwiperChange"
+      :current="currentIndex"
+    >
+      <!-- <swiper-item class="swiper-item swiper-item--hidden">
         <Case />
-      </swiper-item>
-      <swiper-item class="swiper-item" v-for="item in 100" :key="item">
-        <Single />
+      </swiper-item> -->
+      <swiper-item
+        class="swiper-item"
+        v-for="(item, index) in questionList"
+        :key="index"
+      >
+        <Single
+          :options="item"
+          @change="onSingleChange"
+          v-if="item.topic_type === 1"
+        />
+        <Multiple
+          :options="item"
+          @change="onSingleChange"
+          v-if="item.topic_type === 2"
+        />
+        <Judg
+          :options="item"
+          @change="onSingleChange"
+          v-if="item.topic_type === 3"
+        />
+        <Indefinite
+          :options="item"
+          @change="onSingleChange"
+          v-if="item.topic_type === 4"
+        />
+        <Completion
+          :options="item"
+          @change="onSingleChange"
+          v-if="item.topic_type === 5"
+        />
       </swiper-item>
     </swiper>
 
-    <AnswerBar class="bar" @card="toCard" />
+    <AnswerBar
+      class="bar"
+      @card="toCard"
+      @next="handleNext"
+      @prev="handlePrev"
+      :isCollection="!!questionList[currentIndex].is_collection"
+    />
   </view>
 </template>
 <script>
@@ -31,6 +74,7 @@ import Indefinite from "@/components/indefinite";
 import Completion from "@/components/completion";
 import Short from "@/components/short";
 import Case from "@/components/case";
+import { createPractice } from "@/api/index";
 export default {
   name: "answer",
   components: {
@@ -46,13 +90,65 @@ export default {
   },
 
   data() {
-    return {};
+    return {
+      currentIndex: 0,
+      caseIndex: 0,
+      duration: 300,
+      total: 0,
+      questionList: [],
+      logId: "",
+    };
+  },
+  onLoad({ chapterId }) {
+    this.createPractice(chapterId);
   },
   methods: {
+    onSingleChange(answer, id) {
+      console.log(answer, id);
+    },
+    handlePrev() {
+      if (this.currentIndex <= 0) {
+        uni.showToast({
+          icon: "none",
+          title: "已经是第一题了",
+        });
+        return;
+      }
+      this.currentIndex--;
+    },
+    handleNext() {
+      if (this.currentIndex >= this.total - 1) {
+        uni.showToast({
+          icon: "none",
+          title: "已经是最后一题了",
+        });
+        return;
+      }
+      this.currentIndex++;
+    },
+    onSwiperChange({ detail }) {
+      const { current } = detail;
+      console.log(current);
+      this.currentIndex = current;
+    },
+    async createPractice(chapter_id) {
+      const data = {
+        chapter_id,
+      };
+      const res = await createPractice(data);
+      const topic_list = res.data.topic_list;
+      const qusetionType = [1, 2, 3, 4, 5, 6, 7];
+      qusetionType.forEach((item) => {
+        this.questionList = this.questionList.concat(topic_list[item] || []);
+      });
+      console.log(this.questionList);
+      this.total = res.data.total;
+      this.logId = res.data.log_id;
+    },
     toCard() {
-      console.log(1233);
+      this.duration = 0;
       uni.navigateTo({
-        url: "/pages/answerSheet/index?id=1",
+        url: `/pages/answerSheet/index?logId=${this.logId}`,
       });
     },
     look() {

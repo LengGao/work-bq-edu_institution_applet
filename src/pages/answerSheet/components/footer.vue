@@ -1,12 +1,23 @@
 <template>
   <div class="footer">
-    <view class="btn btn--plain">继续练习</view>
-    <view class="btn">继续练习</view>
+    <!-- <view class="btn btn--plain">继续练习</view> -->
+    <view class="btn" v-if="model == 1" @click="handleClick">继续练习</view>
   </div>
 </template>
 <script>
 export default {
   name: "footer",
+  props: {
+    model: {
+      type: [String, Number],
+      default: 1,
+    },
+  },
+  methods: {
+    handleClick(e) {
+      this.$emit("click", e);
+    },
+  },
 };
 </script>
 <style lang="less" scoped>

@@ -3,21 +3,24 @@
     <i-option
       @change="onOptionChange"
       v-for="(item, index) in options"
-      :label="letter[index]"
-      :value="item.value"
+      :label="item.topic_option"
+      :value="item.topic_option"
       :key="index"
-      :status="status(item.value)"
+      :status="status(item.topic_option)"
       :noletter="noletter"
-      >{{ item.text }}</i-option
     >
+      <u-parse :content="item.topic_option_description"
+    /></i-option>
   </view>
 </template>
 <script>
 import IOption from "../option";
+import uParse from "@/components/gaoyia-parse/parse.vue";
 export default {
   name: "select",
   components: {
     IOption,
+    uParse,
   },
   props: {
     noletter: {
@@ -36,31 +39,21 @@ export default {
       type: Array,
       default: () => [],
     },
-    answer: {
+    // 题目正确答案
+    correctAnswer: {
       type: [Array, String, Number],
       default: "",
     },
   },
   data() {
     return {
-      checkedVal: this.value,
-      letter: {
-        0: "A",
-        1: "B",
-        2: "C",
-        3: "D",
-        4: "E",
-        5: "F",
-        6: "G",
-        7: "H",
-        8: "R",
-        9: "J",
-      },
+      // 选中的答案
+      checkedAnswer: this.value,
     };
   },
 
   watch: {
-    checkedVal(newValue, oldValue) {
+    checkedAnswer(newValue, oldValue) {
       if (this.multiple) {
         this.$emit("input", newValue);
         return;
@@ -73,29 +66,32 @@ export default {
   methods: {
     status(value) {
       if (this.multiple) {
-        if (this.answer.length) {
-          if (this.answer.includes(value)) {
+        if (this.correctAnswer.length) {
+          if (this.correctAnswer.includes(value)) {
             return "success";
           }
-          if (this.checkedVal.includes(value) && !this.answer.includes(value)) {
+          if (
+            this.checkedAnswer.includes(value) &&
+            !this.correctAnswer.includes(value)
+          ) {
             return "error";
           }
         }
-        if (this.checkedVal.includes(value)) {
+        if (this.checkedAnswer.includes(value)) {
           return "active";
         }
         return "";
       } else {
         // 单选下的状态
-        if (this.answer) {
-          if (value == this.answer) {
+        if (this.correctAnswer) {
+          if (value == this.correctAnswer) {
             return "success";
           }
-          if (value != this.answer && this.checkedVal === value) {
+          if (value != this.correctAnswer && this.checkedAnswer === value) {
             return "error";
           }
         }
-        if (value === this.checkedVal) {
+        if (value === this.checkedAnswer) {
           return "active";
         }
         return "";
@@ -104,12 +100,14 @@ export default {
     onOptionChange(val) {
       // 多选
       if (this.multiple) {
-        if (!this.answer.length) {
+        if (!this.correctAnswer.length) {
           //已经选了就去掉
-          if (this.checkedVal.includes(val)) {
-            this.checkedVal = this.checkedVal.filter((item) => item !== val);
+          if (this.checkedAnswer.includes(val)) {
+            this.checkedAnswer = this.checkedAnswer.filter(
+              (item) => item !== val
+            );
           } else {
-            this.checkedVal.push(val);
+            this.checkedAnswer.push(val);
           }
         } else {
           uni.showToast({
@@ -119,8 +117,8 @@ export default {
         }
       } else {
         //单选
-        if (!this.answer) {
-          this.checkedVal = val;
+        if (!this.correctAnswer) {
+          this.checkedAnswer = val;
         } else {
           uni.showToast({
             icon: "none",

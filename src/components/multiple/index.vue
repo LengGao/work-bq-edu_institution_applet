@@ -1,21 +1,26 @@
 <template>
   <div class="multiple">
     <view class="quetion-content">
-      奋达科技 放大卡积分的考虑是否将奋达科技放大卡积分
-      的考虑是否将奋达科技放大卡积分的考虑是否将奋达
-      科技放大卡积分的考虑是否将奋达科技放达科技放大卡积分的考虑是否将奋达
+      <u-parse :content="options.topic_description" />
     </view>
-    <Select :options="answerData" multiple v-model="checked" :answer="answer">
+    <Select
+      :options="options.option"
+      multiple
+      v-model="checkedAnswer"
+      :correct-answer="correctAnswer"
+    >
     </Select>
     <AnswerEye @change="handleEyeChange" />
     <AnswerAnalysis
-      v-if="answer.length"
+      v-if="correctAnswer"
       :user-answer="userAnswerText"
-      :answer="answerText"
+      :correct-answer="correctAnswer"
+      :desc="options.topic_analysis"
     />
   </div>
 </template>
 <script>
+import uParse from "@/components/gaoyia-parse/parse.vue";
 import AnswerAnalysis from "@/components/answerAnalysis";
 import Select from "@/components/select";
 import AnswerEye from "@/components/answerEye";
@@ -26,56 +31,38 @@ export default {
     AnswerAnalysis,
     Select,
     AnswerEye,
+    uParse,
   },
-  props: {},
+  props: {
+    options: {
+      type: Object,
+      default: () => ({
+        option: [],
+        topic_description: "",
+      }),
+    },
+  },
   data() {
     return {
-      answer: [],
-      checked: [],
-      answerData: [
-        {
-          value: 1,
-          text: "法将恢复健康大厦1",
-        },
-        {
-          value: 2,
-          text: "法将恢复健2康大厦",
-        },
-        {
-          value: 3,
-          text: "法将恢复健3康大厦",
-        },
-        {
-          value: 4,
-          text: "法将恢复健3康大厦",
-        },
-      ],
-      letter: {
-        0: "A",
-        1: "B",
-        2: "C",
-        3: "D",
-        4: "E",
-        5: "F",
-        6: "G",
-        7: "H",
-        8: "R",
-        9: "J",
-      },
+      correctAnswer: "",
+      checkedAnswer: [],
       userAnswerText: "",
-      answerText: "",
     };
+  },
+  watch: {
+    checkedAnswer(val) {
+      this.$emit("change", val, this.options.id);
+    },
   },
   methods: {
     handleEyeChange(val) {
       if (val) {
-        this.answer = [1, 2];
-        this.getAnswerText();
+        this.correctAnswer = this.options.topic_answer;
+        this.userAnswerText = this.checkedAnswer.toString(",");
       } else {
-        this.answer = [];
+        this.correctAnswer = "";
       }
     },
-    getAnswerText() {},
   },
 };
 </script>

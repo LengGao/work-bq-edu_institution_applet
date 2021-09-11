@@ -30,6 +30,7 @@ export default {
   text-align: center;
   line-height: 80rpx;
   background-color: #eee;
+  font-size: 24rpx;
   margin: 20rpx 25rpx;
   .radius();
   &--success {

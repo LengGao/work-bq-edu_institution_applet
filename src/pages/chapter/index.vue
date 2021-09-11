@@ -28,6 +28,7 @@
           class="chapter-list-item"
           v-for="item in chapterList"
           :key="item.id"
+          @click="toAnswer(item.id)"
         >
           <view class="chapter-info">
             <view class="chapter-info-title">
@@ -78,6 +79,11 @@ export default {
     this.getChapterList();
   },
   methods: {
+    toAnswer(chapterId) {
+      uni.navigateTo({
+        url: `/pages/answer/index?chapterId=${chapterId}`,
+      });
+    },
     async getChapterList() {
       const res = await getChapterList();
       this.chapterList = res.data.list || [];
