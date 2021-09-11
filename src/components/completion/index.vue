@@ -14,6 +14,7 @@
         :disabled="!!correctAnswer"
         v-model="item.value"
         placeholder="请输入"
+        @blur="handlBlur"
       />
     </IOption>
     <AnswerEye @change="handleEyeChange" />
@@ -96,6 +97,10 @@ export default {
     }));
   },
   methods: {
+    handlBlur() {
+      const vals = this.inputItem.map((item) => item.value);
+      this.$emit("change", vals, this.options.id);
+    },
     handleEyeChange(val) {
       if (val) {
         this.correctAnswer = this.options.topic_answer;

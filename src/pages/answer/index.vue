@@ -34,7 +34,7 @@
         />
         <Multiple
           :options="item"
-          @change="onSingleChange"
+          @change="onOtherChange"
           v-if="item.topic_type === 2"
         />
         <Judg
@@ -44,12 +44,12 @@
         />
         <Indefinite
           :options="item"
-          @change="onSingleChange"
+          @change="onOtherChange"
           v-if="item.topic_type === 4"
         />
         <Completion
           :options="item"
-          @change="onSingleChange"
+          @change="onOtherChange"
           v-if="item.topic_type === 5"
         />
       </swiper-item>
@@ -74,7 +74,7 @@ import Indefinite from "@/components/indefinite";
 import Completion from "@/components/completion";
 import Short from "@/components/short";
 import Case from "@/components/case";
-import { createPractice } from "@/api/index";
+import { createPractice, submitAnswer } from "@/api/index";
 export default {
   name: "answer",
   components: {
@@ -97,14 +97,31 @@ export default {
       total: 0,
       questionList: [],
       logId: "",
+      userAnswerMap: {},
     };
+  },
+  onShow() {
+    this.duration = 300;
   },
   onLoad({ chapterId }) {
     this.createPractice(chapterId);
   },
   methods: {
+    // 提交其他题型答案
+    submitOtherAnswer() {
+      for (const id in this.userAnswerMap) {
+        this.userAnswerMap[id] && this.submitAnswer(id, this.userAnswerMap[id]);
+      }
+    },
+    // 收集其他题型答案
+    onOtherChange(answer, id) {
+      console.log(answer);
+      this.userAnswerMap[id] = answer;
+    },
+    // 单选跟判断题答案提交
     onSingleChange(answer, id) {
-      console.log(answer, id);
+      this.submitAnswer(id, [answer]);
+      this.handleNext();
     },
     handlePrev() {
       if (this.currentIndex <= 0) {
@@ -130,7 +147,20 @@ export default {
       const { current } = detail;
       console.log(current);
       this.currentIndex = current;
+      this.submitOtherAnswer();
     },
+    // 提交答案
+    async submitAnswer(topic_id, answer) {
+      const data = {
+        log_id: this.logId,
+        topic_id,
+        answer,
+      };
+      const res = await submitAnswer(data);
+      // 已提交的重置掉
+      this.userAnswerMap[topic_id] && (this.userAnswerMap[topic_id] = null);
+    },
+    // 获取章节练习题目
     async createPractice(chapter_id) {
       const data = {
         chapter_id,

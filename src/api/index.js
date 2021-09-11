@@ -96,3 +96,11 @@ export const getQuestionBoard = (data) => {
         data,
     })
 }
+// 提交答案
+export const submitAnswer = (data) => {
+    return requset({
+        url: 'Topic/submitAnswer',
+        method: 'post',
+        data,
+    })
+}
