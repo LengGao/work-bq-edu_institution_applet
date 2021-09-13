@@ -18,50 +18,82 @@
       :duration="duration"
       @change="onSwiperChange"
       :current="currentIndex"
+      @animationfinish="onAnimationfinish"
     >
-      <!-- <swiper-item class="swiper-item swiper-item--hidden">
-        <Case />
-      </swiper-item> -->
       <swiper-item
         class="swiper-item"
+        :class="{ 'swiper-item--hidden': item.topic_type === 7 }"
         v-for="(item, index) in questionList"
         :key="index"
       >
-        <Single
-          :options="item"
-          @change="onSingleChange"
-          v-if="item.topic_type === 1"
-        />
-        <Multiple
-          :options="item"
-          @change="onOtherChange"
-          v-if="item.topic_type === 2"
-        />
-        <Judg
-          :options="item"
-          @change="onSingleChange"
-          v-if="item.topic_type === 3"
-        />
-        <Indefinite
-          :options="item"
-          @change="onOtherChange"
-          v-if="item.topic_type === 4"
-        />
-        <Completion
-          :options="item"
-          @change="onOtherChange"
-          v-if="item.topic_type === 5"
-        />
+        <block
+          v-if="
+            currentIndex === index ||
+            currentIndex - 1 === index ||
+            currentIndex + 1 === index
+          "
+        >
+          <Single
+            :model="model"
+            :options="item"
+            @change="onSingleChange"
+            v-if="item.topic_type === 1"
+          />
+          <Multiple
+            :model="model"
+            :options="item"
+            @change="onOtherChange"
+            v-if="item.topic_type === 2"
+          />
+          <Judg
+            :model="model"
+            :options="item"
+            @change="onSingleChange"
+            v-if="item.topic_type === 3"
+          />
+          <Indefinite
+            :model="model"
+            :options="item"
+            @change="onOtherChange"
+            v-if="item.topic_type === 4"
+          />
+          <Completion
+            :model="model"
+            :options="item"
+            @change="onOtherChange"
+            v-if="item.topic_type === 5"
+          />
+          <Short
+            :model="model"
+            :options="item"
+            @change="onOtherChange"
+            v-if="item.topic_type === 6"
+          />
+          <Case
+            :model="model"
+            :options="item"
+            :serial-number="currentIndex + 1"
+            :log-id="logId"
+            :current="caseIndex"
+            v-if="item.topic_type === 7"
+            :ref="`case-${item.id}`"
+            :is-active="currentIndex === index && duration === 300"
+          />
+        </block>
       </swiper-item>
     </swiper>
-
     <AnswerBar
       class="bar"
       @card="toCard"
       @next="handleNext"
       @prev="handlePrev"
+      @collect="setCollection"
+      :show-time="model === '2'"
       :isCollection="!!questionList[currentIndex].is_collection"
-    />
+    >
+      <van-count-down :time="time" @finish="onTimeOut" />
+    </AnswerBar>
+    <van-dialog id="van-dialog" />
   </view>
 </template>
 <script>
@@ -74,7 +106,18 @@ import Indefinite from "@/components/indefinite";
 import Completion from "@/components/completion";
 import Short from "@/components/short";
 import Case from "@/components/case";
-import { createPractice, submitAnswer } from "@/api/index";
+import Dialog from "@/wxcomponents/vant/dialog/dialog";
+import {
+  createPractice,
+  submitAnswer,
+  settlement,
+  setCollection,
+  createMockExam,
+  createRealTopic,
+  createIndependent,
+  createDailyClock,
+  createChallenge,
+} from "@/api/index";
 export default {
   name: "answer",
   components: {
@@ -98,29 +141,113 @@ export default {
       questionList: [],
       logId: "",
       userAnswerMap: {},
+      // 练习的题目类型
+      type: 1, // 1:章节练习，2：模拟考试 ...
+      // 是否结算
+      hasSettlement: false,
+      // 答题模式
+      model: "1",
+      // 倒计时时间
+      time: 0,
+      isEndCount: 0,
     };
+  },
+  watch: {
+    isEndCount(val) {
+      if (val > 1 && this.model === "2" && !this.hasSettlement) {
+        Dialog.confirm({
+          title: "提示",
+          message: "您已完成最后一题，确认交卷吗？",
+          confirmButtonColor: "#199fff",
+        })
+          .then(() => {
+            this.toTestResoult();
+          })
+          .catch(() => {
+            // on cancel
+          });
+      }
+    },
   },
   onShow() {
     this.duration = 300;
+    this.setCurrentModel();
   },
-  onLoad({ chapterId }) {
-    this.createPractice(chapterId);
+
+  onLoad({ chapterId, title = "题目", type = 1, time = 0, isExam }) {
+    this.type = type;
+    this.time = time;
+    this.isExam = isExam;
+    uni.setNavigationBarTitle({
+      title,
+    });
+    this.createQuestion(chapterId, isExam);
+  },
+  onUnload() {
+    this.settlement();
   },
   methods: {
+    setCurrentModel() {
+      // model 1:刷题模式，2：考试模式 3：解析模式
+      if (this.type === "1") {
+        this.model = "1";
+      }
+      if (this.type === "2") {
+        this.model = "2";
+        if (this.hasSettlement) {
+          this.model = "3";
+        }
+      }
+      if (this.type === "3") {
+        if (this.isExam === "1") {
+          this.model = "2";
+          if (this.hasSettlement) {
+            this.model = "3";
+          }
+        } else {
+          this.model = "1";
+        }
+      }
+      if (this.type === "4") {
+        this.model = "2";
+        if (this.hasSettlement) {
+          this.model = "3";
+        }
+      }
+      if (this.type === "5") {
+        this.model = "1";
+      }
+      if (this.type === "6") {
+        this.model = "1";
+      }
+    },
+    onTimeOut() {
+      Dialog.alert({
+        title: "提示",
+        message: "考试时间到，系统自动交卷",
+        confirmButtonColor: "#199fff",
+      }).then(() => {
+        this.toTestResoult();
+      });
+    },
     // 提交其他题型答案
     submitOtherAnswer() {
+      if (this.hasSettlement) {
+        return;
+      }
       for (const id in this.userAnswerMap) {
         this.userAnswerMap[id] && this.submitAnswer(id, this.userAnswerMap[id]);
       }
     },
     // 收集其他题型答案
     onOtherChange(answer, id) {
-      console.log(answer);
       this.userAnswerMap[id] = answer;
+      this.questionList[this.currentIndex].userAnswer = answer;
     },
     // 单选跟判断题答案提交
     onSingleChange(answer, id) {
       this.submitAnswer(id, [answer]);
+      this.questionList[this.currentIndex].userAnswer = answer;
       this.handleNext();
     },
     handlePrev() {
@@ -131,6 +258,7 @@ export default {
         });
         return;
       }
+      this.isEndCount = 0;
       this.currentIndex--;
     },
     handleNext() {
@@ -139,15 +267,60 @@ export default {
           icon: "none",
           title: "已经是最后一题了",
         });
+        this.isEndCount++;
         return;
       }
       this.currentIndex++;
     },
+    onSwiperBoundary() {
+      if (this.currentIndex <= 0) {
+        uni.showToast({
+          icon: "none",
+          title: "已经是第一题了",
+        });
+        return;
+      }
+      if (this.currentIndex >= this.total - 1) {
+        uni.showToast({
+          icon: "none",
+          title: "已经是最后一题了",
+        });
+        this.isEndCount++;
+        return;
+      }
+      this.isEndCount = 0;
+    },
+    onAnimationfinish({ detail }) {
+      const { current } = detail;
+      this.onSwiperBoundary();
+    },
     onSwiperChange({ detail }) {
       const { current } = detail;
-      console.log(current);
       this.currentIndex = current;
-      this.submitOtherAnswer();
+      this.$nextTick(() => {
+        this.submitOtherAnswer();
+      });
+    },
+    // 题目收藏
+    async setCollection() {
+      const { id: topic_id, is_collection } =
+        this.questionList[this.currentIndex];
+      const data = {
+        topic_id,
+        is_collection: +!is_collection,
+      };
+      const res = await setCollection(data);
+      this.questionList[this.currentIndex].is_collection = data.is_collection;
+      uni.showToast({
+        title: res.message,
+      });
+    },
+    // 结算成绩
+    async settlement() {
+      const data = {
+        log_id: this.logId,
+      };
+      const res = await settlement(data);
     },
     // 提交答案
     async submitAnswer(topic_id, answer) {
@@ -161,28 +334,44 @@ export default {
       this.userAnswerMap[topic_id] && (this.userAnswerMap[topic_id] = null);
     },
     // 获取章节练习题目
-    async createPractice(chapter_id) {
+    async createQuestion(chapter_id, is_exam) {
       const data = {
         chapter_id,
+        is_exam,
       };
-      const res = await createPractice(data);
+      const api = {
+        1: createPractice,
+        2: createMockExam,
+        3: createRealTopic,
+        4: createIndependent,
+        5: createDailyClock,
+        6: createChallenge,
+      };
+      const res = await api[this.type](data);
       const topic_list = res.data.topic_list;
       const qusetionType = [1, 2, 3, 4, 5, 6, 7];
       qusetionType.forEach((item) => {
         this.questionList = this.questionList.concat(topic_list[item] || []);
       });
-      console.log(this.questionList);
       this.total = res.data.total;
       this.logId = res.data.log_id;
     },
-    toCard() {
+    toTestResoult() {
       this.duration = 0;
+      this.hasSettlement = true;
       uni.navigateTo({
-        url: `/pages/answerSheet/index?logId=${this.logId}`,
+        url: `/pages/testResults/index?logId=${this.logId}`,
       });
     },
-    look() {
-      this.answer = [1, 2];
+
+    toCard() {
+      this.submitOtherAnswer();
+      this.duration = 0;
+      this.$nextTick(() => {
+        uni.navigateTo({
+          url: `/pages/answerSheet/index?logId=${this.logId}&model=${this.model}`,
+        });
+      });
     },
   },
 };
@@ -202,6 +391,7 @@ export default {
       padding: 20rpx 40rpx;
       &--hidden {
         overflow: hidden;
+        padding: 0;
       }
     }
   }

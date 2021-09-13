@@ -36,18 +36,29 @@ export default {
         topic_description: "",
       }),
     },
+    model: {
+      type: String,
+      default: "1",
+    },
   },
   data() {
     return {
       correctAnswer: "",
-      checkedAnswer: "",
+      checkedAnswer: this.options.userAnswer || "",
     };
   },
   watch: {
     checkedAnswer(val) {
-      this.correctAnswer = this.options.topic_answer;
+      if (this.model === "1") {
+        this.correctAnswer = this.options.topic_answer;
+      }
       this.$emit("change", val, this.options.id);
     },
+  },
+  created() {
+    if (this.options.userAnswer && this.model === "1") {
+      this.correctAnswer = this.options.topic_answer;
+    }
   },
 };
 </script>

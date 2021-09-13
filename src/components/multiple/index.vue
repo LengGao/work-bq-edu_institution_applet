@@ -10,7 +10,7 @@
       :correct-answer="correctAnswer"
     >
     </Select>
-    <AnswerEye @change="handleEyeChange" />
+    <AnswerEye @change="handleEyeChange" v-if="model === '1'" />
     <AnswerAnalysis
       v-if="correctAnswer"
       :user-answer="userAnswerText"
@@ -41,11 +41,15 @@ export default {
         topic_description: "",
       }),
     },
+    model: {
+      type: String,
+      default: "1",
+    },
   },
   data() {
     return {
       correctAnswer: "",
-      checkedAnswer: [],
+      checkedAnswer: this.options.userAnswer || [],
       userAnswerText: "",
     };
   },
@@ -53,6 +57,16 @@ export default {
     checkedAnswer(val) {
       this.$emit("change", val, this.options.id);
     },
+    model(val) {
+      if (val === "3") {
+        this.handleEyeChange(true);
+      }
+    },
+  },
+  created() {
+    if (this.model === "3") {
+      this.handleEyeChange(true);
+    }
   },
   methods: {
     handleEyeChange(val) {

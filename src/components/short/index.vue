@@ -1,16 +1,21 @@
 <template>
   <div class="short">
     <view class="quetion-content">
-      奋达科技 放大卡积分的考虑是否将奋达科技放大卡积分
-      的考虑是否将奋达科技放大卡积分的考虑是否将奋达
-      科技放大卡积分的考虑是否将奋达科技放达科技放大卡积分的考虑是否将奋达
+      <u-parse :content="options.topic_description" />
     </view>
-    <textarea class="text" v-model="item.value" placeholder="请输入" />
-    <AnswerEye @change="handleEyeChange" />
-    <AnswerAnalysis short v-if="answer" :desc="answer" />
+    <textarea
+      :disabled="!!correctAnswer"
+      class="text"
+      @input="onInput"
+      v-model="value"
+      placeholder="请输入"
+    />
+    <AnswerEye @change="handleEyeChange" v-if="model === '1'" />
+    <AnswerAnalysis short v-if="correctAnswer" :desc="correctAnswer" />
   </div>
 </template>
 <script>
+import uParse from "@/components/gaoyia-parse/parse.vue";
 import AnswerAnalysis from "@/components/answerAnalysis";
 import Select from "@/components/select";
 import AnswerEye from "@/components/answerEye";
@@ -20,58 +25,50 @@ export default {
     AnswerAnalysis,
     Select,
     AnswerEye,
+    uParse,
   },
-  props: {},
-
+  props: {
+    options: {
+      type: Object,
+      default: () => ({
+        option: [],
+        topic_description: "",
+      }),
+    },
+    model: {
+      type: String,
+      default: "1",
+    },
+  },
   data() {
     return {
-      sequence: true,
-      answer: "",
-      checked: [],
-      answerData: [
-        {
-          value: "",
-          status: "",
-        },
-        {
-          value: "",
-          status: "",
-        },
-        {
-          value: "",
-          status: "",
-        },
-        {
-          value: "",
-          status: "",
-        },
-      ],
-      letter: {
-        0: "A",
-        1: "B",
-        2: "C",
-        3: "D",
-        4: "E",
-        5: "F",
-        6: "G",
-        7: "H",
-        8: "R",
-        9: "J",
-      },
-      userAnswerText: "",
-      answerText: "",
+      correctAnswer: "",
+      value: this.options.userAnswer || "",
     };
   },
-  methods: {
-    handleEyeChange(val) {
-      if (val) {
-        this.answer = "fdasfdsafdsafdsfds";
-        this.getAnswerText();
-      } else {
-        this.answer = "";
+  watch: {
+    model(val) {
+      if (val === "3") {
+        this.handleEyeChange(true);
       }
     },
-    getAnswerText() {},
+  },
+  created() {
+    if (this.model === "3") {
+      this.handleEyeChange(true);
+    }
+  },
+  methods: {
+    onInput() {
+      this.$emit("change", [this.value], this.options.id);
+    },
+    handleEyeChange(val) {
+      if (val) {
+        this.correctAnswer = this.options.topic_answer;
+      } else {
+        this.correctAnswer = "";
+      }
+    },
   },
 };
 </script>

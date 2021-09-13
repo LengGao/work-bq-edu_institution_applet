@@ -3,7 +3,7 @@
     <image class="challenge-logo" src="../../static/shuatitiaozhan.png" />
     <view class="challenge-btns">
       <view class="btn-primary plain" @click="toRankList">刷题挑战榜</view>
-      <view class="btn-primary">开始挑战赛</view>
+      <view class="btn-primary" @click="toAnswer">开始挑战赛</view>
     </view>
     <view class="challenge-desc">
       <view class="desc-title">———— 刷题挑战说明 ————</view>
@@ -17,6 +17,11 @@
 export default {
   name: "brushQuestionChallenge",
   methods: {
+    toAnswer() {
+      uni.navigateTo({
+        url: `/pages/answer/index?title=刷题挑战&type=6`,
+      });
+    },
     toRankList() {
       uni.redirectTo({
         url: `/pages/challengeList/index`,

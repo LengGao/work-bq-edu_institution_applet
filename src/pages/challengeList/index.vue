@@ -62,7 +62,7 @@
           </view>
         </view>
       </view>
-      <view class="btn-primary">{{
+      <view class="btn-primary" @click="toAnswer">{{
         selfData.is_challenge ? "继续挑战" : "开始挑战"
       }}</view>
     </view>
@@ -93,11 +93,22 @@ export default {
       total: 0,
     };
   },
+  onShow() {
+    setTimeout(() => {
+      this.getRankList();
+      this.getSelfAchievement();
+    }, 1000);
+  },
   onLoad() {
     this.getRankList();
     this.getSelfAchievement();
   },
   methods: {
+    toAnswer() {
+      uni.navigateTo({
+        url: `/pages/answer/index?title=刷题挑战&type=6`,
+      });
+    },
     onScrolltolower() {
       if (this.rankList.length < this.total) {
         this.page++;

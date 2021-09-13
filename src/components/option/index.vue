@@ -9,7 +9,7 @@
       <text class="iconfont" v-else-if="status === 'error'">&#xe621;</text>
       <text v-else>{{ !noletter ? label : "" }}</text>
     </view>
-    <view class="option-text van-ellipsis"><slot></slot></view>
+    <view class="option-text"><slot></slot></view>
   </view>
 </template>
 <script>

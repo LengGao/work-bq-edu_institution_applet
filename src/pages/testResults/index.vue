@@ -1,70 +1,113 @@
 <template>
-  <div class="test-results">
+  <view class="test-results">
     <view class="results-header">
       <view class="score">
         <image class="score-img" src="../../static/icon-water.png"></image>
         <view class="score-title">最终得分</view>
-        <view class="score-value">99.99</view>
+        <view class="score-value">{{ testResult.info.mark || 0 }}</view>
       </view>
       <view class="topics">
         <view class="topics-number topics-number--success">
           <text class="title">正确题数：</text>
-          <text class="number">60000</text>
+          <text class="number">{{ testResult.info.right_problem || 0 }}</text>
         </view>
         <view class="topics-number topics-number--error">
           <text class="title">错误题数：</text>
-          <text class="number">60</text>
+          <text class="number">{{ testResult.info.fail_problem || 0 }}</text>
         </view>
         <view class="topics-number topics-number--none">
           <text class="title">未答题数：</text>
-          <text class="number">60</text>
+          <text class="number">{{ testResult.info.unanswered || 0 }}</text>
         </view>
       </view>
     </view>
     <view class="results-container">
-      <Title>单选题</Title>
-      <view class="circular-list">
-        <Circular>1</Circular>
-        <Circular type="primary">2</Circular>
-        <Circular type="success">3</Circular>
-        <Circular type="error">4</Circular>
-        <Circular>5</Circular>
-        <Circular>6</Circular>
-        <Circular type="success">3</Circular>
-        <Circular type="error">4</Circular>
-        <Circular>5</Circular><Circular type="success">3</Circular>
-        <Circular type="error">4</Circular>
-        <Circular>5</Circular><Circular type="success">3</Circular>
-        <Circular type="error">4</Circular>
-        <Circular>5</Circular>
-      </view>
-      <Title>多选题</Title>
-      <view class="circular-list">
-        <Circular>1</Circular>
-        <Circular type="primary">2</Circular>
-        <Circular type="success">3</Circular>
-        <Circular type="error">4</Circular>
-        <Circular>5</Circular>
-        <Circular>6</Circular>
-        <Circular type="success">3</Circular>
-        <Circular type="error">4</Circular>
-        <Circular>5</Circular><Circular type="success">3</Circular>
-        <Circular type="error">4</Circular>
-        <Circular>5</Circular><Circular type="success">3</Circular>
-        <Circular type="error">4</Circular>
-        <Circular>5</Circular>
-      </view>
+      <block v-for="(item, type) in testResult.list" :key="type">
+        <Title>{{ typeMap[type] }}</Title>
+        <view class="circular-list">
+          <!-- 对案例题特殊处理 -->
+          <block v-if="type == 7">
+            <block v-for="parent in item" :key="parent.id">
+              <Circular
+                @click="goBack(parent.index, index)"
+                v-for="(child, index) in parent.child"
+                :key="child.id"
+                :type="statusMap[child.answer_status]"
+                >{{ parent.index }}-{{ index + 1 }}</Circular
+              >
+            </block>
+          </block>
+          <block v-else>
+            <Circular
+              @click="goBack(question.index)"
+              v-for="question in item"
+              :key="question.id"
+              :type="statusMap[question.answer_status]"
+              >{{ question.index }}</Circular
+            >
+          </block>
+        </view>
+      </block>
     </view>
-  </div>
+    <view class="results-footer">
+      <view class="btn" @click="goBack">查看全部解析</view>
+    </view>
+  </view>
 </template>
 <script>
 import Title from "@/components/title";
 import Circular from "@/components/circular";
+import { settlement } from "@/api/index";
 export default {
   name: "testResults",
   components: {
     Title,
     Circular,
+  },
+  data() {
+    return {
+      testResult: {
+        info: {},
+        list: [],
+      },
+      statusMap: {
+        "-1": "none",
+        0: "error",
+        1: "success",
+      },
+      typeMap: {
+        1: "单选题",
+        2: "多选题",
+        3: "判断题",
+        4: "不定项题",
+        5: "填空题",
+        6: "简答题",
+        7: "案例题",
+      },
+    };
+  },
+  onLoad({ logId }) {
+    this.settlement(logId);
+  },
+  methods: {
+    goBack(number, caseIndex) {
+      const pages = getCurrentPages(); //获取所有页面栈实例列表
+      const prevPage = pages[pages.length - 2]; //上一页页面实例
+      const vm = prevPage.$vm;
+      // 把选中的赋值
+      typeof number === "number" && (vm.currentIndex = number - 1);
+      caseIndex && (vm.caseIndex = caseIndex);
+      vm.duration = 300;
+      uni.navigateBack();
+    },
+    // 结算成绩
+    async settlement(log_id) {
+      const data = {
+        log_id,
+      };
+      const res = await settlement(data);
+      this.testResult = res.data;
+    },
   },
 };
 </script>
@@ -72,6 +115,7 @@ export default {
 @import "@/styles/var";
 .test-results {
   padding: 40rpx;
+  padding-bottom: 160rpx;
   .results-header {
     padding: 35rpx 20rpx 35rpx 35rpx;
     border-radius: 16rpx;
@@ -153,6 +197,32 @@ export default {
     .circular-list {
       display: flex;
       flex-wrap: wrap;
+    }
+  }
+  .results-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 0 20rpx;
+    border-top: @border;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100rpx;
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
+    background-color: #fff;
+    .btn {
+      color: #fff;
+      background-color: @primary;
+      padding: 10rpx 0;
+      width: 300rpx;
+      text-align: center;
+      border-radius: 10rpx;
+      &:active {
+        opacity: 0.8;
+      }
     }
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <view class="answer-sheet">
-    <Header />
+    <Header :model="model" />
     <view class="content">
       <block v-for="(item, type) in listData" :key="type">
         <Title>{{ typeMap[type] }}</Title>
@@ -12,7 +12,7 @@
                 @click="onSelect(parent.index, index)"
                 v-for="(child, index) in parent.child"
                 :key="child.id"
-                :type="statusMap[child.answer_status]"
+                :type="statusMap[model][child.answer_status]"
                 >{{ parent.index }}-{{ index + 1 }}</Circular
               >
             </block>
@@ -22,14 +22,20 @@
               @click="onSelect(question.index)"
               v-for="question in item"
               :key="question.id"
-              :type="statusMap[question.answer_status]"
+              :type="statusMap[model][question.answer_status]"
               >{{ question.index }}</Circular
             >
           </block>
         </view>
       </block>
     </view>
-    <Footer class="footer" :model="model" @click="handleClick" />
+    <Footer
+      class="footer"
+      :model="model"
+      @submit="handleSubmit"
+      @click="handleClick"
+    />
+    <van-dialog id="van-dialog" />
   </view>
 </template>
 <script>
@@ -38,6 +44,7 @@ import Title from "@/components/title";
 import Circular from "@/components/circular";
 import Footer from "./components/footer.vue";
 import { getQuestionBoard } from "@/api/index";
+import Dialog from "@/wxcomponents/vant/dialog/dialog";
 export default {
   name: "answerSheet",
   components: {
@@ -48,12 +55,24 @@ export default {
   },
   data() {
     return {
-      model: 1, // 1 刷题 2答题
+      model: "1", // 1 刷题 2答题 3 答题后的解析
       listData: {},
       statusMap: {
-        "-1": "none",
-        0: "error",
-        1: "success",
+        1: {
+          "-1": "none",
+          0: "error",
+          1: "success",
+        },
+        2: {
+          "-1": "none",
+          0: "primary",
+          1: "primary",
+        },
+        3: {
+          "-1": "none",
+          0: "error",
+          1: "success",
+        },
       },
       typeMap: {
         1: "单选题",
@@ -66,7 +85,7 @@ export default {
       },
     };
   },
-  onLoad({ logId, model = 1 }) {
+  onLoad({ logId, model = "1" }) {
     console.log(logId);
     this.model = model;
     this.getQuestionBoard(logId);
@@ -78,9 +97,26 @@ export default {
       const vm = prevPage.$vm;
       // 把选中的赋值
       vm.currentIndex = number - 1;
-      vm.caseIndex = caseIndex;
+      caseIndex && (vm.caseIndex = caseIndex);
       vm.duration = 300;
       this.goBack();
+    },
+    handleSubmit() {
+      Dialog.confirm({
+        title: "提示",
+        message: "您还有题未作答，确认交卷吗？",
+        confirmButtonColor: "#199fff",
+      })
+        .then(() => {
+          const pages = getCurrentPages(); //获取所有页面栈实例列表
+          const prevPage = pages[pages.length - 2]; //上一页页面实例
+          const vm = prevPage.$vm;
+          this.goBack();
+          vm.toTestResoult();
+        })
+        .catch(() => {
+          // on cancel
+        });
     },
     handleClick() {
       this.goBack();

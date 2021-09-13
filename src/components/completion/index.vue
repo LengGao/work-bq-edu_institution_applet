@@ -17,7 +17,7 @@
         @blur="handlBlur"
       />
     </IOption>
-    <AnswerEye @change="handleEyeChange" />
+    <AnswerEye @change="handleEyeChange" v-if="model === '1'" />
     <AnswerAnalysis
       v-if="correctAnswer"
       :correct-answer="correctAnswer"
@@ -47,6 +47,10 @@ export default {
         option: [],
         topic_description: "",
       }),
+    },
+    model: {
+      type: String,
+      default: "1",
     },
   },
   data() {
@@ -88,13 +92,21 @@ export default {
         });
       }
     },
+    model(val) {
+      if (val === "3") {
+        this.handleEyeChange(true);
+      }
+    },
   },
   created() {
-    this.inputItem = this.options.option.map((item) => ({
+    this.inputItem = this.options.option.map((item, index) => ({
       ...item,
-      value: "",
+      value: (this.options.userAnswer && this.options.userAnswer[index]) || "",
       status: "",
     }));
+    if (this.model === "3") {
+      this.handleEyeChange(true);
+    }
   },
   methods: {
     handlBlur() {
@@ -104,7 +116,6 @@ export default {
     handleEyeChange(val) {
       if (val) {
         this.correctAnswer = this.options.topic_answer;
-        console.log(this.inputItem);
       } else {
         this.correctAnswer = "";
       }

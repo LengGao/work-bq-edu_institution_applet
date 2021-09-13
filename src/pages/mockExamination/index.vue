@@ -21,14 +21,14 @@
             >
           </view>
         </view>
-        <view>
+        <!-- <view>
           <text class="iconfont">&#xe66b;</text>
-        </view>
+        </view> -->
       </view>
       <NoData top="50%" v-if="!list.length">暂无考试记录</NoData>
     </view>
     <view class="footer">
-      <view class="btn-primary">智能组卷</view>
+      <view class="btn-primary" @click="toTestConfig">智能组卷</view>
     </view>
   </scroll-view>
 </template>
@@ -51,6 +51,11 @@ export default {
     this.getMockExamHistory();
   },
   methods: {
+    toTestConfig() {
+      uni.navigateTo({
+        url: `/pages/testExamConfig/index?type=1`,
+      });
+    },
     onScrolltolower() {
       if (this.list.length < this.total) {
         this.page++;

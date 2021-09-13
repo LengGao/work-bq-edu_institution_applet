@@ -13,6 +13,10 @@
       <text class="iconfont" v-show="!isCollection">&#xe630;</text>
       <view class="bar-text">收藏</view>
     </view>
+    <view class="answer-bar-item" v-if="showTime" @click="onClickNext">
+      <text class="iconfont">&#xe602;</text>
+      <view class="bar-text"><slot></slot></view>
+    </view>
     <view class="answer-bar-item" @click="onClickNext">
       <text class="iconfont">&#xe65c;</text>
       <view class="bar-text">下一题</view>
@@ -24,6 +28,10 @@ export default {
   name: "answerBar",
   props: {
     isCollection: {
+      type: Boolean,
+      default: false,
+    },
+    showTime: {
       type: Boolean,
       default: false,
     },

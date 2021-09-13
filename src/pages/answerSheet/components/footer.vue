@@ -1,21 +1,33 @@
 <template>
-  <div class="footer">
+  <view class="footer">
     <!-- <view class="btn btn--plain">继续练习</view> -->
-    <view class="btn" v-if="model == 1" @click="handleClick">继续练习</view>
-  </div>
+    <block v-if="model === '1'">
+      <view class="btn" @click="handleClick">继续练习</view>
+    </block>
+    <block v-if="model === '2'">
+      <view class="btn plain" @click="handleClick">继续做题</view>
+      <view class="btn" @click="handleSubmit">马上交卷</view>
+    </block>
+    <block v-if="model === '3'">
+      <view class="btn" @click="handleClick">查看全部解析</view>
+    </block>
+  </view>
 </template>
 <script>
 export default {
   name: "footer",
   props: {
     model: {
-      type: [String, Number],
-      default: 1,
+      type: String,
+      default: "1",
     },
   },
   methods: {
     handleClick(e) {
       this.$emit("click", e);
+    },
+    handleSubmit(e) {
+      this.$emit("submit", e);
     },
   },
 };
@@ -44,7 +56,7 @@ export default {
     &:active {
       opacity: 0.8;
     }
-    &--plain {
+    &.plain {
       background-color: #fff;
       border: 1px solid @primary;
       padding: 8rpx 0;

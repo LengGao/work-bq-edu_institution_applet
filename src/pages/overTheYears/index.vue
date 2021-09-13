@@ -3,7 +3,12 @@
     <image class="b-img" src="../../static/over-year-background.png"></image>
     <view class="over-years-header"> </view>
     <view class="question-list">
-      <view class="question-list-item" v-for="item in list" :key="item.id">
+      <view
+        class="question-list-item"
+        v-for="item in list"
+        :key="item.id"
+        @click="toConfig(item.id)"
+      >
         <view class="question-info">
           <view class="question-info-title">
             <text class="iconfont">&#xe61e;</text>
@@ -44,6 +49,11 @@ export default {
     this.getRealTestPapers();
   },
   methods: {
+    toConfig(chapterId) {
+      uni.navigateTo({
+        url: `/pages/testExamConfig/index?type=2&chapterId=${chapterId}`,
+      });
+    },
     onScrolltolower() {
       if (this.list.length < this.total) {
         this.page++;

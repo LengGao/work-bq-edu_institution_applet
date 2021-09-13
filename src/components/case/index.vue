@@ -1,40 +1,7 @@
 <template>
   <div class="case">
     <view class="quetion-content">
-      奋达科技 fdasfsdf 的考虑是否 将奋达科技放虑是否将奋达科技放大卡
-      积分的考虑是否将奋虑是否将奋达科技 放大卡积分的考
-      虑是否将奋虑是奋达科技放虑是否将奋达科技放大卡
-      积分的考虑是否将奋虑是否将奋达科技
-      放大卡积分的考奋达科技放虑是否将奋达科技放大卡
-      积分的考虑是否将奋虑是否将奋达科技
-      放大卡积分的考奋达科技放虑是否将奋达科技放大卡
-      积分的考虑是否将奋虑是否将奋达科技
-      放大卡积分的考奋达科技放虑是否将奋达科技放大卡
-      积分的考虑是否将奋虑是否将奋达科技
-      放大卡积分的考奋达科技放虑是否将奋达科技放大卡
-      积分的考虑是否将奋虑是否将奋达科技
-      放大卡积分的考奋达科技放虑是否将奋达科技放大卡
-      积分的考虑是否将奋虑是否将奋达科技
-      放大卡积分的考奋达科技放虑是否将奋达科技放大卡
-      积分的考虑是否将奋虑是否将奋达科技
-      放大卡积分的考奋达科技放虑是否将奋达科技放大卡
-      积分的考虑是否将奋虑是否将奋达科技
-      放大卡积分的考奋达科技放虑是否将奋达科技放大卡
-      积分的考虑是否将奋虑是否将奋达科技
-      放大卡积分的考奋达科技放虑是否将奋达科技放大卡
-      积分的考虑是否将奋虑是否将奋达科技
-      放大卡积分的考奋达科技放虑是否将奋达科技放大卡
-      积分的考虑是否将奋虑是否将奋达科技
-      放大卡积分的考奋达科技放虑是否将奋达科技放大卡
-      积分的考虑是否将奋虑是否将奋达科技
-      放大卡积分的考奋达科技放虑是否将奋达科技放大卡
-      积分的考虑是否将奋虑是否将奋达科技
-      放大卡积分的考奋达科技放虑是否将奋达科技放大卡
-      积分的考虑是否将奋虑是否将奋达科技
-      放大卡积分的考奋达科技放虑是否将奋达科技放大卡
-      积分的考虑是否将奋虑是否将奋达科技 放大卡积分的考否将奋达科技放
-      大卡积分的考虑是否将奋虑是否将奋达
-      科技放大卡积分的考虑是否将奋大卡积分的考虑是否将奋达 科技放
+      <u-parse :content="options.topic_description" />
     </view>
     <view class="drawer" :class="{ 'drawer--open': isOpen }">
       <view class="btn" @click="handleToggle">
@@ -42,22 +9,63 @@
         <view class="right" :class="{ 'right--active': isOpen }"></view>
       </view>
       <view class="child-header">
-        <view class="child-header-title">案例题 36-1</view>
+        <view class="child-header-title"
+          >案例题 {{ serialNumber }}-{{ currentIndex + 1 }}</view
+        >
         <view class="child-header-actions">
-          <view class="prev">上一题</view>
+          <view class="prev" @click="handlePrev">上一题</view>
           <view class="next" @click="handleNext">下一题</view>
         </view>
       </view>
 
-      <swiper class="child-content swiper" :current="current" duration="300">
-        <swiper-item class="swiper-item">
+      <swiper
+        class="child-content swiper"
+        @change="onSwiperChange"
+        :current="currentIndex"
+        duration="300"
+        @animationfinish="onAnimationfinish"
+      >
+        <!-- <swiper-item class="swiper-item">
           <scroll-view scroll-y class="scroll-view">
             <Single />
           </scroll-view>
-        </swiper-item>
-        <swiper-item class="swiper-item">
+        </swiper-item> -->
+        <swiper-item
+          class="swiper-item"
+          v-for="(item, index) in options.child"
+          :key="index"
+        >
           <scroll-view scroll-y class="scroll-view">
-            <Single />
+            <Single
+              :options="item"
+              @change="onSingleChange"
+              v-if="item.topic_child_type === 1"
+            />
+            <Multiple
+              :options="item"
+              @change="onOtherChange"
+              v-if="item.topic_child_type === 2"
+            />
+            <Judg
+              :options="item"
+              @change="onSingleChange"
+              v-if="item.topic_child_type === 3"
+            />
+            <Indefinite
+              :options="item"
+              @change="onOtherChange"
+              v-if="item.topic_child_type === 4"
+            />
+            <Completion
+              :options="item"
+              @change="onOtherChange"
+              v-if="item.topic_child_type === 5"
+            />
+            <Short
+              :options="item"
+              @change="onOtherChange"
+              v-if="item.topic_child_type === 6"
+            />
           </scroll-view>
         </swiper-item>
       </swiper>
@@ -65,6 +73,7 @@
   </div>
 </template>
 <script>
+import uParse from "@/components/gaoyia-parse/parse.vue";
 import AnswerBar from "@/components/answerBar";
 import AnswerHead from "@/components/answerHead";
 import Single from "@/components/single";
@@ -73,6 +82,7 @@ import Judg from "@/components/judg";
 import Indefinite from "@/components/indefinite";
 import Completion from "@/components/completion";
 import Short from "@/components/short";
+import { submitAnswer } from "@/api/index";
 export default {
   name: "case",
   components: {
@@ -84,21 +94,130 @@ export default {
     Indefinite,
     Completion,
     Short,
+    uParse,
   },
-  props: {},
+  props: {
+    options: {
+      type: Object,
+      default: () => ({
+        child: [],
+        topic_description: "",
+      }),
+    },
+    current: {
+      type: Number,
+      default: 0,
+    },
+    // 当前案例题序号
+    serialNumber: {
+      type: [Number, String],
+      default: 0,
+    },
+    logId: {
+      type: [Number, String],
+      default: "",
+    },
+    isActive: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  watch: {
+    current(newValue) {
+      this.currentIndex = newValue;
+    },
+    isActive(val) {
+      if (!val) {
+        // 失焦时提交答案
+        this.submitOtherAnswer();
+      }
+    },
+  },
   data() {
     return {
       isOpen: false,
-      current: 0,
+      currentIndex: 0,
+      userAnswerMap: {},
+      total: 0,
     };
   },
+  created() {
+    this.total = this.options.child.length;
+  },
   methods: {
+    // 提交其他题型答案
+    submitOtherAnswer() {
+      for (const id in this.userAnswerMap) {
+        this.userAnswerMap[id] && this.submitAnswer(id, this.userAnswerMap[id]);
+      }
+    },
+    // 收集其他题型答案
+    onOtherChange(answer, id) {
+      this.userAnswerMap[id] = answer;
+    },
+    // 单选跟判断题答案提交
+    onSingleChange(answer, id) {
+      this.submitAnswer(id, [answer]);
+      this.handleNext();
+    },
+    onSwiperChange({ detail }) {
+      const { current } = detail;
+      this.currentIndex = current;
+      this.$nextTick(() => {
+        this.submitOtherAnswer();
+      });
+    },
+    // 提交答案
+    async submitAnswer(topic_id, answer) {
+      const data = {
+        log_id: this.logId,
+        topic_id,
+        answer,
+      };
+      const res = await submitAnswer(data);
+      // 已提交的重置掉
+      this.userAnswerMap[topic_id] && (this.userAnswerMap[topic_id] = null);
+    },
+    handlePrev() {
+      if (this.currentIndex <= 0) {
+        uni.showToast({
+          icon: "none",
+          title: "已经是第一小题了",
+        });
+        return;
+      }
+      this.currentIndex--;
+    },
     handleNext() {
-      this.current++;
+      if (this.currentIndex >= this.total - 1) {
+        uni.showToast({
+          icon: "none",
+          title: "已经是最后一小题了",
+        });
+        return;
+      }
+      this.currentIndex++;
+    },
+    onSwiperBoundary() {
+      if (this.currentIndex <= 0) {
+        uni.showToast({
+          icon: "none",
+          title: "已经是第一小题了",
+        });
+      }
+      if (this.currentIndex >= this.total - 1) {
+        uni.showToast({
+          icon: "none",
+          title: "已经是最后一小题了",
+        });
+      }
+    },
+    onAnimationfinish({ detail }) {
+      const { current } = detail;
+      this.onSwiperBoundary();
     },
     handleToggle() {
       this.isOpen = !this.isOpen;
-      console.log(this.isOpen);
     },
   },
 };
@@ -111,7 +230,7 @@ export default {
   .quetion-content {
     height: 90%;
     overflow-y: auto;
-    padding-bottom: 40rpx;
+    padding: 0 40rpx;
   }
 }
 .drawer {

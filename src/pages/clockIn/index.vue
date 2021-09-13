@@ -33,13 +33,12 @@
                 >{{ clockData.correct_rate }}<text class="unit">%</text></text
               >
             </view>
-            <text v-else>打卡</text>
+            <text v-else @click="toAnswer">打卡</text>
           </view>
         </view>
         <view class="card-bottom">
-          <view class="link" v-if="clockData.is_clock"
-            >今天打卡成功，查看报告解析>>></view
-          >
+          <!-- <view class="link" v-if="clockData.is_clock">今天打卡成功</view> -->
+          <view v-if="clockData.is_clock">今日打卡成功</view>
           <view v-else>{{ appInfo.app_name }}每天陪你进步一点点~~</view>
         </view>
       </view>
@@ -71,13 +70,18 @@ export default {
       },
     };
   },
-  onLoad() {
+  onShow() {
     this.getClockDetails();
   },
   computed: {
     ...mapGetters(["appInfo"]),
   },
   methods: {
+    toAnswer() {
+      uni.navigateTo({
+        url: `/pages/answer/index?title=每日打卡&type=5`,
+      });
+    },
     async getClockDetails() {
       const res = await getClockDetails();
       this.clockData = res.data;
@@ -163,7 +167,7 @@ export default {
             font-size: 28rpx;
           }
           .value {
-            font-size: 70rpx;
+            font-size: 50rpx;
             .unit {
               font-size: 28rpx;
             }

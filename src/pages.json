@@ -1,13 +1,6 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
-			"path": "pages/chapter/index",
-			"style": {
-				"navigationBarTitleText": "章节练习",
-				"usingComponents": {}
-			}
-		},
-		{
 			"path": "pages/index/index",
 			"style": {
 				"navigationBarTitleText": "题库",
@@ -15,6 +8,20 @@
 					"van-button": "/wxcomponents/vant/button/index",
 					"van-action-sheet": "/wxcomponents/vant/action-sheet/index"
 				}
+			}
+		},
+		{
+			"path": "pages/mockExamination/index",
+			"style": {
+				"navigationBarTitleText": "模拟考试",
+				"usingComponents": {}
+			}
+		},
+		{
+			"path": "pages/chapter/index",
+			"style": {
+				"navigationBarTitleText": "章节练习",
+				"usingComponents": {}
 			}
 		},
 		{
@@ -74,13 +81,6 @@
 			}
 		},
 		{
-			"path": "pages/mockExamination/index",
-			"style": {
-				"navigationBarTitleText": "模拟考试",
-				"usingComponents": {}
-			}
-		},
-		{
 			"path": "pages/overTheYears/index",
 			"style": {
 				"navigationBarTitleText": "历年真题",
@@ -89,7 +89,7 @@
 			}
 		},
 		{
-			"path": "pages/overYearIntroduce/index",
+			"path": "pages/testExamConfig/index",
 			"style": {
 				"navigationBarTitleText": "试卷介绍",
 				"usingComponents": {}
@@ -105,15 +105,17 @@
 		{
 			"path": "pages/testResults/index",
 			"style": {
-				"navigationBarTitleText": "uni-app",
+				"navigationBarTitleText": "考试结果",
 				"usingComponents": {}
 			}
 		},
 		{
 			"path": "pages/answerSheet/index",
 			"style": {
-				"navigationBarTitleText": "uni-app",
-				"usingComponents": {}
+				"navigationBarTitleText": "答题卡",
+				"usingComponents": {
+					"van-dialog": "/wxcomponents/vant/dialog/index"
+				}
 			}
 		},
 		{
@@ -126,8 +128,11 @@
 		{
 			"path": "pages/answer/index",
 			"style": {
-				"navigationBarTitleText": "uni-app",
-				"usingComponents": {},
+				"navigationBarTitleText": "刷题",
+				"usingComponents": {
+					"van-count-down": "/wxcomponents/vant/count-down/index",
+					"van-dialog": "/wxcomponents/vant/dialog/index"
+				},
 				"disableScroll": true
 			}
 		},

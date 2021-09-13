@@ -1,15 +1,21 @@
 <template>
   <view class="header">
-    <view class="status status--success">正确</view>
-    <view class="status status--error">错误</view>
-    <view class="status status--none">未回答</view>
+    <block v-if="model === '1' || model === '3'">
+      <view class="status status--success">正确</view>
+      <view class="status status--error">错误</view>
+      <view class="status status--none">未回答</view>
+    </block>
+    <block v-if="model === '2'">
+      <view class="status status--primary">已回答</view>
+      <view class="status status--none">未回答</view>
+    </block>
   </view>
 </template>
 <script>
 export default {
   name: "header",
   props: {
-    type: {
+    model: {
       type: String,
       default: "primary",
     },
@@ -32,6 +38,9 @@ export default {
       height: 32rpx;
       border-radius: 50%;
       margin-right: 16rpx;
+    }
+    &--primary::before {
+      background-color: @primary;
     }
     &--success::before {
       background-color: @success;
