@@ -92,15 +92,17 @@ export default {
   .menu {
     width: 170rpx;
     flex-shrink: 0;
-    padding: 30rpx 47rpx;
+    padding: 30rpx;
     text-align: center;
     box-sizing: border-box;
     font-size: 26rpx;
+    background-color: #f2f6fc;
+    border-right: 1rpx dashed #eee;
     &-item {
       margin-bottom: 40rpx;
       padding: 10rpx 0;
       font-weight: bold;
-      border-bottom: 2rpx solid #fff;
+      border-bottom: 2rpx solid #eef5ff;
       &--active {
         border-color: @primary;
         color: @primary;
@@ -111,8 +113,9 @@ export default {
     flex: 1;
     height: 100%;
     padding-left: 20rpx;
+    padding-top: 16rpx;
     box-sizing: border-box;
-    background-color: #f2f6fc;
+    background-color: #f2f6fc7e;
     position: relative;
     .type-list {
       .flex-c();
@@ -121,7 +124,7 @@ export default {
         margin-right: 20rpx;
         margin-bottom: 20rpx;
         width: 260rpx;
-        height: 120rpx;
+        min-height: 120rpx;
         background-color: #fff;
         border-radius: 10rpx;
         padding: 30rpx 26rpx;

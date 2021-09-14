@@ -6,7 +6,17 @@
       <view class="user-info">
         <view>
           <text class="name">{{ userInfo.nickname }}</text>
-          {{ userInfo.mobile.replace(/^(\d{3})\d{4}(\d{4})$/, "$1****$2") }}
+          {{
+            (userInfo.mobile + "").replace(/^(\d{3})\d{4}(\d{4})$/, "$1****$2")
+          }}
+          <van-button
+            @click="toLogin"
+            v-if="appInfo.debug == 1"
+            size="mini"
+            type="warning"
+            class="btn-login"
+            >登 录</van-button
+          >
         </view>
         <view class="tips">不怕千万人阻挡，只怕自己投降。</view>
       </view>
@@ -71,6 +81,11 @@ export default {
     };
   },
   methods: {
+    toLogin() {
+      uni.redirectTo({
+        url: "/pages/login/index",
+      });
+    },
     toAuthor() {
       uni.navigateTo({
         url: "/pages/author/index",
@@ -84,6 +99,9 @@ export default {
 @import "@/styles/var";
 .user {
   padding: 0 30rpx;
+  .btn-login {
+    margin-left: 20rpx;
+  }
   .b-img {
     position: absolute;
     left: 0;

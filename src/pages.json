@@ -131,7 +131,7 @@
 		{
 			"path": "pages/selectQuestionBank/index",
 			"style": {
-				"navigationBarTitleText": "题库列表",
+				"navigationBarTitleText": "请选择题库",
 				"usingComponents": {}
 			}
 		},

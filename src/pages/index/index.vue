@@ -30,8 +30,11 @@
           <text>{{ clockData.total }}人正在参与</text>
         </view>
         <view class="card-footer-right">
-          <van-button size="small" type="primary" v-if="!clockData.is_clock"
-            >今日未打卡</van-button
+          <van-button
+            size="small"
+            type="primary"
+            :class="{ success: !!clockData.is_clock }"
+            >{{ clockData.is_clock ? "今日已打卡" : "今日未打卡" }}</van-button
           >
         </view>
       </view>
@@ -229,6 +232,7 @@ export default {
     box-shadow: 0 0 10rpx rgba(93, 207, 255, 0.3);
     &--primary {
       background-color: @primary;
+      margin-top: 30rpx;
       .card-title {
         color: #fff;
         &::before {
@@ -324,7 +328,7 @@ export default {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background-color: #fff;
+      background-color: #fefefe;
       padding: 32rpx;
       border-bottom-left-radius: 15rpx;
       border-bottom-right-radius: 15rpx;
@@ -346,6 +350,13 @@ export default {
       &-right {
         /deep/.van-button {
           border-radius: 10rpx;
+        }
+        .success {
+          /deep/.van-button {
+            border-radius: 10rpx;
+            background-color: @success;
+            border-color: @success;
+          }
         }
       }
     }

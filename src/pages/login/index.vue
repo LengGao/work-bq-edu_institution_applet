@@ -41,7 +41,7 @@ export default {
     this.wxLogin();
   },
   methods: {
-    ...mapActions(["setUserInfo"]),
+    ...mapActions(["setUserInfo", "getAppInfo"]),
     async getSign() {
       const data = {
         code: this.wxCode,
@@ -58,6 +58,7 @@ export default {
       const res = await getSign(data);
       if (res.error_code === 0) {
         this.setUserInfo(res.data);
+        this.getAppInfo();
         uni.switchTab({
           url: "/pages/index/index",
         });
