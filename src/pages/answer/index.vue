@@ -69,12 +69,13 @@
             @change="onOtherChange"
             v-if="item.topic_type === 6"
           />
+          <!-- :current="caseIndex" -->
+
           <Case
             :model="model"
             :options="item"
             :serial-number="currentIndex + 1"
             :log-id="logId"
-            :current="caseIndex"
             v-if="item.topic_type === 7"
             :ref="`case-${item.id}`"
             :is-active="currentIndex === index && duration === 300"
@@ -161,6 +162,12 @@ export default {
   },
   watch: {
     isEndCount(val) {
+      if (val > 1 && this.type === "6") {
+        uni.redirectTo({
+          url: "/pages/challengeList/index",
+        });
+        return;
+      }
       if (val > 1 && this.model === "2" && !this.hasSettlement) {
         Dialog.confirm({
           title: "提示",
@@ -169,6 +176,19 @@ export default {
         })
           .then(() => {
             this.toTestResoult();
+          })
+          .catch(() => {
+            // on cancel
+          });
+      }
+      if (val > 1 && this.model !== "2") {
+        Dialog.confirm({
+          title: "提示",
+          message: "您已完成最后一题，确定返回上一页吗？",
+          confirmButtonColor: "#199fff",
+        })
+          .then(() => {
+            uni.navigateBack();
           })
           .catch(() => {
             // on cancel
@@ -188,6 +208,7 @@ export default {
     time = 0,
     isExam,
     isAnalysis,
+    isContinue,
   }) {
     this.type = type;
     this.time = time;
@@ -196,7 +217,7 @@ export default {
     uni.setNavigationBarTitle({
       title,
     });
-    this.createQuestion(chapterId, isExam);
+    this.createQuestion(chapterId, isExam, isContinue);
   },
   onUnload() {
     if (!["7", "8"].includes(this.type)) {
@@ -285,7 +306,7 @@ export default {
         this.submitAnswer(id, [answer]);
       }
       this.questionList[this.currentIndex].userAnswer = answer;
-      this.handleNext();
+      this.model === "2" && this.handleNext();
     },
     handlePrev() {
       if (this.currentIndex <= 0) {
@@ -300,10 +321,11 @@ export default {
     },
     handleNext() {
       if (this.currentIndex >= this.total - 1) {
-        uni.showToast({
-          icon: "none",
-          title: "已经是最后一题了",
-        });
+        this.isEndCount < 1 &&
+          uni.showToast({
+            icon: "none",
+            title: "已经是最后一题了",
+          });
         this.isEndCount++;
         return;
       }
@@ -318,10 +340,11 @@ export default {
         return;
       }
       if (this.currentIndex >= this.total - 1) {
-        uni.showToast({
-          icon: "none",
-          title: "已经是最后一题了",
-        });
+        this.isEndCount < 1 &&
+          uni.showToast({
+            icon: "none",
+            title: "已经是最后一题了",
+          });
         this.isEndCount++;
         return;
       }
@@ -373,10 +396,11 @@ export default {
       this.userAnswerMap[topic_id] && (this.userAnswerMap[topic_id] = null);
     },
     // 获取章节练习题目
-    async createQuestion(chapter_id, is_exam) {
+    async createQuestion(chapter_id, is_exam, redo) {
       const data = {
         chapter_id,
         is_exam,
+        redo,
       };
       if (this.type === "7") {
         data.is_collection = 1; // 收藏夹
@@ -396,10 +420,18 @@ export default {
       };
       const res = await api[this.type](data);
       const topic_list = res.data.topic_list;
+      const topic_id = res.data.topic_id || "";
       const qusetionType = [1, 2, 3, 4, 5, 6, 7];
       qusetionType.forEach((item) => {
         this.questionList = this.questionList.concat(topic_list[item] || []);
       });
+      // 继续上一次
+      topic_id &&
+        this.questionList.forEach((item, index) => {
+          if (item.id === topic_id) {
+            this.currentIndex = index;
+          }
+        });
       this.total = res.data.total;
       this.logId = res.data.log_id;
       // 收藏夹错题集的答题卡数据

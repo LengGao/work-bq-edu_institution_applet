@@ -1,4 +1,5 @@
 import store from '@/store'
+console.log(process.env.VUE_APP_BASE_API)
 const toLogin = () => {
     uni.redirectTo({
         url: "/pages/login/index"

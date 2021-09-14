@@ -6,7 +6,24 @@
 				"navigationBarTitleText": "题库",
 				"usingComponents": {
 					"van-button": "/wxcomponents/vant/button/index",
-					"van-action-sheet": "/wxcomponents/vant/action-sheet/index"
+					"van-action-sheet": "/wxcomponents/vant/action-sheet/index",
+					"van-icon": "/wxcomponents/vant/icon/index"
+				}
+			}
+		},
+		{
+			"path": "pages/author/index",
+			"style": {
+				"navigationBarTitleText": "关于我们",
+				"usingComponents": {}
+			}
+		},
+		{
+			"path": "pages/user/index",
+			"style": {
+				"navigationBarTitleText": "个人中心",
+				"usingComponents": {
+					"van-button": "/wxcomponents/vant/button/index"
 				}
 			}
 		},
@@ -21,7 +38,9 @@
 			"path": "pages/chapter/index",
 			"style": {
 				"navigationBarTitleText": "章节练习",
-				"usingComponents": {}
+				"usingComponents": {
+					"van-dialog": "/wxcomponents/vant/dialog/index"
+				}
 			}
 		},
 		{
@@ -35,15 +54,6 @@
 			"path": "pages/login/index",
 			"style": {
 				"navigationBarTitleText": "登录",
-				"usingComponents": {
-					"van-button": "/wxcomponents/vant/button/index"
-				}
-			}
-		},
-		{
-			"path": "pages/user/index",
-			"style": {
-				"navigationBarTitleText": "个人中心",
 				"usingComponents": {
 					"van-button": "/wxcomponents/vant/button/index"
 				}
@@ -166,7 +176,7 @@
 	},
 	"globalStyle": {
 		"navigationBarTextStyle": "#ffffff",
-		"navigationBarTitleText": "uni-app",
+		"navigationBarTitleText": "题库",
 		"navigationBarBackgroundColor": "#199FFF",
 		"backgroundColor": "#F8F8F8"
 	}

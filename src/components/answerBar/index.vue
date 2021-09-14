@@ -13,7 +13,7 @@
       <text class="iconfont" v-show="!isCollection">&#xe630;</text>
       <view class="bar-text">收藏</view>
     </view>
-    <view class="answer-bar-item" v-if="showTime" @click="onClickNext">
+    <view class="answer-bar-item" v-if="showTime">
       <text class="iconfont">&#xe602;</text>
       <view class="bar-text"><slot></slot></view>
     </view>

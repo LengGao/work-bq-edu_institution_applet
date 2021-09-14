@@ -28,7 +28,7 @@
           class="chapter-list-item"
           v-for="item in chapterList"
           :key="item.id"
-          @click="toAnswer(item.id, item.chapter_name)"
+          @click="toAnswer(item.id, item.chapter_name, item.answer_num)"
         >
           <view class="chapter-info">
             <view class="chapter-info-title">
@@ -55,11 +55,13 @@
       </view>
     </view>
     <NoData top="40%" v-if="!chapterList.length" />
+    <van-dialog id="van-dialog" />
   </view>
 </template>
 <script>
 import { getChapterList } from "@/api/index";
 import NoData from "@/components/noData";
+import Dialog from "@/wxcomponents/vant/dialog/dialog";
 export default {
   name: "chapter",
   components: {
@@ -88,10 +90,30 @@ export default {
     this.isOnload = true;
   },
   methods: {
-    toAnswer(chapterId, title) {
-      uni.navigateTo({
-        url: `/pages/answer/index?chapterId=${chapterId}&title=${title}&type=1`,
-      });
+    toAnswer(chapterId, title, answer_num) {
+      if (!answer_num) {
+        uni.navigateTo({
+          url: `/pages/answer/index?chapterId=${chapterId}&title=${title}&type=1&isContinue=0`,
+        });
+        return;
+      }
+      Dialog.confirm({
+        title: "提示",
+        message: "检测到您有做题记录",
+        confirmButtonColor: "#199fff",
+        confirmButtonText: "继续上一次",
+        cancelButtonText: "重新开始",
+      })
+        .then(() => {
+          uni.navigateTo({
+            url: `/pages/answer/index?chapterId=${chapterId}&title=${title}&type=1&isContinue=1`,
+          });
+        })
+        .catch(() => {
+          uni.navigateTo({
+            url: `/pages/answer/index?chapterId=${chapterId}&title=${title}&type=1&isContinue=0`,
+          });
+        });
     },
     async getChapterList() {
       const res = await getChapterList();

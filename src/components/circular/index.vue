@@ -32,6 +32,7 @@ export default {
   background-color: #eee;
   font-size: 24rpx;
   margin: 20rpx 25rpx;
+  color: #666;
   .radius();
   &--success {
     background-color: @success;

@@ -105,7 +105,7 @@ export default {
   },
   methods: {
     toAnswer() {
-      uni.navigateTo({
+      uni.redirectTo({
         url: `/pages/answer/index?title=刷题挑战&type=6`,
       });
     },

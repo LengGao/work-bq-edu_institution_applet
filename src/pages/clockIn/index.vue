@@ -27,10 +27,10 @@
         </view>
         <view class="card-center">
           <view class="clock-in-btn">
-            <view v-if="clockData.is_clock">
+            <view v-if="clockData.is_clock" @click="toast" class="text">
               <text class="title">正确率</text>
-              <text class="value"
-                >{{ clockData.correct_rate }}<text class="unit">%</text></text
+              <view class="value"
+                >{{ clockData.correct_rate }}<text class="unit">%</text></view
               >
             </view>
             <text v-else @click="toAnswer">打卡</text>
@@ -38,7 +38,7 @@
         </view>
         <view class="card-bottom">
           <!-- <view class="link" v-if="clockData.is_clock">今天打卡成功</view> -->
-          <view v-if="clockData.is_clock">今日打卡成功</view>
+          <view class="link" v-if="clockData.is_clock">今日打卡成功!</view>
           <view v-else>{{ appInfo.app_name }}每天陪你进步一点点~~</view>
         </view>
       </view>
@@ -86,6 +86,11 @@ export default {
     ...mapGetters(["appInfo"]),
   },
   methods: {
+    toast() {
+      uni.showToast({
+        title: "今日已打卡",
+      });
+    },
     toAnswer() {
       uni.navigateTo({
         url: `/pages/answer/index?title=每日打卡&type=5`,
@@ -172,6 +177,9 @@ export default {
           flex-direction: column;
           align-items: center;
           justify-content: center;
+          .text {
+            margin-top: -26rpx;
+          }
           .title {
             font-size: 28rpx;
           }
@@ -192,7 +200,8 @@ export default {
         margin-bottom: 70rpx;
         .link {
           color: @primary;
-          text-decoration: underline;
+          // text-decoration: underline;
+          font-size: 26rpx;
           &:active {
             opacity: 0.7;
           }

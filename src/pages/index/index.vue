@@ -3,6 +3,7 @@
     <view class="header" @click="toType">
       <text class="iconfont">&#xe64f;</text>
       <text class="title">{{ questionBankInfo.question_bank_name }}</text>
+      <van-icon name="arrow-down" />
     </view>
     <view class="card card--primary" @click="linkTo('clockIn')">
       <view class="card-title">每日打卡，为梦想持续加码</view>
@@ -20,6 +21,7 @@
       <view class="card-footer">
         <view class="card-footer-left">
           <image
+            class="avatar"
             v-for="(item, index) in clockData.list"
             :key="index"
             :src="item.cover"
@@ -218,6 +220,7 @@ export default {
     .title {
       font-weight: bold;
       margin-left: 10rpx;
+      margin-right: 10rpx;
     }
   }
   .card {
@@ -337,6 +340,7 @@ export default {
           width: 40rpx;
           height: 40rpx;
           border-radius: 50%;
+          border: 1rpx solid #ddd;
         }
       }
       &-right {

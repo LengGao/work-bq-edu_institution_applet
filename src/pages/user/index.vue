@@ -2,67 +2,81 @@
   <view class="user">
     <image class="b-img" src="../../static/chapter-background.png"></image>
     <view class="user-header">
-      <image
-        class="avatar"
-        src="https://tinypng.com/images/panda-chewing.png"
-      ></image>
+      <image class="avatar" :src="userInfo.cover"></image>
       <view class="user-info">
         <view>
-          <text class="name">张小北</text>
-          135****9471
+          <text class="name">{{ userInfo.nickname }}</text>
+          {{ userInfo.mobile.replace(/^(\d{3})\d{4}(\d{4})$/, "$1****$2") }}
         </view>
         <view class="tips">不怕千万人阻挡，只怕自己投降。</view>
       </view>
     </view>
     <view class="user-mune">
-      <view class="menu-item">
+      <button class="menu-item" open-type="share">
         <view class="menu-item-info">
           <text class="iconfont">&#xf36c;</text>
           <text class="title">推荐给好友</text>
         </view>
         <text class="iconfont">&#xe66b;</text>
-      </view>
-      <view class="menu-item">
+      </button>
+      <!-- <view class="menu-item">
         <view class="menu-item-info">
           <text class="iconfont">&#xe646;</text>
           <text class="title">学习报告</text>
         </view>
         <text class="iconfont">&#xe66b;</text>
-      </view>
-      <view class="menu-item">
+      </view> -->
+      <view class="menu-item" @click="toAuthor">
         <view class="menu-item-info">
           <text class="iconfont">&#xe603;</text>
           <text class="title">关于我们</text>
         </view>
         <text class="iconfont">&#xe66b;</text>
       </view>
-      <view class="menu-item">
+      <button class="menu-item" open-type="feedback">
         <view class="menu-item-info">
           <text class="iconfont">&#xe610;</text>
           <text class="title">意见反馈</text>
         </view>
         <text class="iconfont">&#xe66b;</text>
-      </view>
-      <view class="menu-item">
+      </button>
+      <button class="menu-item" open-type="contact">
         <view class="menu-item-info">
           <text class="iconfont">&#xe60e;</text>
           <text class="title">联系客服</text>
         </view>
         <text class="iconfont">&#xe66b;</text>
-      </view>
+      </button>
     </view>
   </view>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
       title: "我的",
     };
   },
+  computed: {
+    ...mapGetters(["userInfo", "appInfo"]),
+  },
   onLoad() {},
-  methods: {},
+  onShareAppMessage() {
+    return {
+      title: this.appInfo.app_name,
+      path: "/pages/index/index",
+      imageUrl: this.appInfo.logo,
+    };
+  },
+  methods: {
+    toAuthor() {
+      uni.navigateTo({
+        url: "/pages/author/index",
+      });
+    },
+  },
 };
 </script>
 
@@ -108,8 +122,15 @@ export default {
       box-sizing: border-box;
       color: #666;
       border-bottom: 1px solid #eee;
+      font-size: 30rpx;
       .flex-c();
       justify-content: space-between;
+      background-color: #fff;
+      padding: 0;
+      border-radius: 0;
+      &::after {
+        border: 0;
+      }
       &:active {
         opacity: 0.7;
       }
