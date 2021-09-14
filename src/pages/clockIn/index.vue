@@ -68,15 +68,19 @@ export default {
         use_time: "00:00",
         total: 0,
       },
+      isOnload: false,
     };
   },
   onShow() {
-    setTimeout(() => {
-      this.getClockDetails();
-    }, 1000);
+    !this.isOnload &&
+      setTimeout(() => {
+        this.getClockDetails();
+      }, 1000);
+    this.isOnload = false;
   },
   onLoad() {
     this.getClockDetails();
+    this.isOnload = true;
   },
   computed: {
     ...mapGetters(["appInfo"]),

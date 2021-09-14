@@ -43,10 +43,19 @@ export default {
       list: [],
       total: 0,
       page: 1,
+      isOnload: false,
     };
+  },
+  onShow() {
+    !this.isOnload &&
+      setTimeout(() => {
+        this.getIndependentPapers();
+      }, 1000);
+    this.isOnload = false;
   },
   onLoad() {
     this.getIndependentPapers();
+    this.isOnload = true;
   },
   methods: {
     toConfig(chapterId) {

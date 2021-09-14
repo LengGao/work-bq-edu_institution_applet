@@ -73,10 +73,19 @@ export default {
         answer_total_num: 0,
         correct_rate: 0,
       },
+      isOnload: false,
     };
+  },
+  onShow() {
+    !this.isOnload &&
+      setTimeout(() => {
+        this.getChapterList();
+      }, 1000);
+    this.isOnload = false;
   },
   onLoad() {
     this.getChapterList();
+    this.isOnload = true;
   },
   methods: {
     toAnswer(chapterId, title) {

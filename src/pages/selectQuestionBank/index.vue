@@ -34,6 +34,9 @@
           >
         </view>
       </block>
+      <NoData top="30%" v-if="!typeList.length"
+        >暂无题库数据，请联系管理员</NoData
+      >
     </scroll-view>
   </view>
 </template>
@@ -41,10 +44,12 @@
 import Title from "@/components/title";
 import { getQuestionBankList } from "@/api/index";
 import { mapActions, mapGetters } from "vuex";
+import NoData from "@/components/noData";
 export default {
   name: "selectQuestionBank",
   components: {
     Title,
+    NoData,
   },
   data() {
     return {
@@ -108,6 +113,7 @@ export default {
     padding-left: 20rpx;
     box-sizing: border-box;
     background-color: #f2f6fc;
+    position: relative;
     .type-list {
       .flex-c();
       flex-wrap: wrap;

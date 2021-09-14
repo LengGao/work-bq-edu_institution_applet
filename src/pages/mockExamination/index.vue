@@ -1,12 +1,8 @@
 <template>
-  <scroll-view
-    scroll-y
-    @scrolltolower="onScrolltolower"
-    class="mock-examination"
-  >
+  <view class="mock-examination">
     <image class="b-img" src="../../static/mock-background.png"></image>
     <view class="mock-examination-header"> </view>
-    <view class="record-list">
+    <scroll-view class="record-list" scroll-y @scrolltolower="onScrolltolower">
       <view class="record-title">模拟考试历史记录</view>
       <view class="record-list-item" v-for="item in list" :key="item.id">
         <view class="record-info">
@@ -26,11 +22,11 @@
         </view> -->
       </view>
       <NoData top="50%" v-if="!list.length">暂无考试记录</NoData>
-    </view>
+    </scroll-view>
     <view class="footer">
       <view class="btn-primary" @click="toTestConfig">智能组卷</view>
     </view>
-  </scroll-view>
+  </view>
 </template>
 <script>
 import { getMockExamHistory } from "@/api/index";
@@ -47,7 +43,7 @@ export default {
       page: 1,
     };
   },
-  onLoad() {
+  onShow() {
     this.getMockExamHistory();
   },
   methods: {
@@ -82,7 +78,8 @@ export default {
 .mock-examination {
   height: 100%;
   box-sizing: border-box;
-  padding-bottom: 240rpx;
+  display: flex;
+  flex-direction: column;
   .b-img {
     position: absolute;
     left: 0;
@@ -99,6 +96,9 @@ export default {
     box-shadow: 0 0 10rpx rgba(93, 207, 255, 0.3);
     padding: 20rpx 30rpx;
     background-color: #fff;
+    flex: 1;
+    box-sizing: border-box;
+    overflow: hidden;
     .record-title {
       color: @primary;
       font-weight: bold;
@@ -138,12 +138,10 @@ export default {
     }
   }
   .footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
     width: 100%;
     padding: 40rpx 0 80rpx;
     background-color: #fff;
+    margin-top: auto;
     .flex-c();
     justify-content: center;
     .btn-primary {

@@ -410,9 +410,11 @@ export default {
     toTestResoult() {
       this.duration = 0;
       this.hasSettlement = true;
-      uni.navigateTo({
-        url: `/pages/testResults/index?logId=${this.logId}`,
-      });
+      setTimeout(() => {
+        uni.navigateTo({
+          url: `/pages/testResults/index?logId=${this.logId}`,
+        });
+      }, 500);
     },
 
     toCard() {
