@@ -26,7 +26,7 @@ export const getChapterList = (data) => {
 // 获取打卡数据
 export const getClockDetails = (data) => {
     return requset({
-        url: '/DailyClock/details',
+        url: 'DailyClock/details',
         method: 'get',
         data,
     })
@@ -58,7 +58,7 @@ export const getIndependentPapers = (data) => {
 // 刷题挑战排行榜列表
 export const getRankList = (data) => {
     return requset({
-        url: '/Challenge/rank',
+        url: 'Challenge/rank',
         method: 'get',
         data,
     })
@@ -66,7 +66,7 @@ export const getRankList = (data) => {
 // 刷题挑战排行榜-我的成绩
 export const getSelfAchievement = (data) => {
     return requset({
-        url: '/Challenge/myself',
+        url: 'Challenge/myself',
         method: 'get',
         data,
     })
@@ -74,7 +74,7 @@ export const getSelfAchievement = (data) => {
 // 收藏夹列表
 export const getFavoritesList = (data) => {
     return requset({
-        url: '/UserTopicRecord/chapter',
+        url: 'UserTopicRecord/chapter',
         method: 'get',
         data,
     })
@@ -188,5 +188,22 @@ export const createChallenge = (data) => {
         method: 'post',
         data,
         loading: true
+    })
+}
+// 收藏夹错题集题目
+export const getUserTopicRecord = (data) => {
+    return requset({
+        url: 'UserTopicRecord/Topic',
+        method: 'post',
+        data,
+        loading: true
+    })
+}
+// 提交错题集答案
+export const submitWrongQuestion = (data) => {
+    return requset({
+        url: 'UserTopicRecord/submit',
+        method: 'post',
+        data,
     })
 }

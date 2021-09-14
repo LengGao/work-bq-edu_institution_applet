@@ -71,6 +71,11 @@ export default {
     };
   },
   onShow() {
+    setTimeout(() => {
+      this.getClockDetails();
+    }, 1000);
+  },
+  onLoad() {
     this.getClockDetails();
   },
   computed: {

@@ -1,6 +1,5 @@
 const userInfo = uni.getStorageSync('userInfo') || {}
 const questionBankInfo = uni.getStorageSync('questionBankInfo') || {}
-console.log(111, userInfo)
 const user = {
     state: {
         userInfo: userInfo,

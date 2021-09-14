@@ -1,6 +1,6 @@
 <template>
   <view class="answer-sheet">
-    <Header :model="model" />
+    <Header :model="model" v-if="isRequest === '1'" />
     <view class="content">
       <block v-for="(item, type) in listData" :key="type">
         <Title>{{ typeMap[type] }}</Title>
@@ -45,6 +45,7 @@ import Circular from "@/components/circular";
 import Footer from "./components/footer.vue";
 import { getQuestionBoard } from "@/api/index";
 import Dialog from "@/wxcomponents/vant/dialog/dialog";
+import { mapGetters } from "vuex";
 export default {
   name: "answerSheet",
   components: {
@@ -83,12 +84,20 @@ export default {
         6: "简答题",
         7: "案例题",
       },
+      isRequest: "1",
     };
   },
-  onLoad({ logId, model = "1" }) {
-    console.log(logId);
+  computed: {
+    ...mapGetters(["questionList"]),
+  },
+  onLoad({ logId, model = "1", isRequest }) {
     this.model = model;
-    this.getQuestionBoard(logId);
+    this.isRequest = isRequest;
+    if (isRequest === "1") {
+      this.getQuestionBoard(logId);
+    } else {
+      this.listData = this.questionList;
+    }
   },
   methods: {
     onSelect(number, caseIndex) {

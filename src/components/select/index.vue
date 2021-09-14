@@ -110,20 +110,20 @@ export default {
             this.checkedAnswer.push(val);
           }
         } else {
-          uni.showToast({
-            icon: "none",
-            title: "已经答过了",
-          });
+          // uni.showToast({
+          //   icon: "none",
+          //   title: "已经答过了",
+          // });
         }
       } else {
         //单选
         if (!this.correctAnswer) {
           this.checkedAnswer = val;
         } else {
-          uni.showToast({
-            icon: "none",
-            title: "已经答过了",
-          });
+          // uni.showToast({
+          //   icon: "none",
+          //   title: "已经答过了",
+          // });
         }
       }
     },

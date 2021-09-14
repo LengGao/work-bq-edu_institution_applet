@@ -10,8 +10,16 @@
           >{{ item.chapter_name }}（{{ item.topic_num }}）</view
         >
         <view class="actions">
-          <view class="btn-primary plain">背题</view>
-          <view class="btn-primary">重练</view>
+          <view
+            class="btn-primary plain"
+            @click="toAnswer(1, item.id, item.chapter_name)"
+            >背题</view
+          >
+          <view
+            class="btn-primary"
+            @click="toAnswer(0, item.id, item.chapter_name)"
+            >重练</view
+          >
         </view>
       </view>
       <NoData v-if="!list.length" />
@@ -33,10 +41,15 @@ export default {
       page: 1,
     };
   },
-  onLoad() {
+  onShow() {
     this.getFavoritesList();
   },
   methods: {
+    toAnswer(isAnalysis, chapterId, title) {
+      uni.navigateTo({
+        url: `/pages/answer/index?title=${title}&type=7&isAnalysis=${isAnalysis}&chapterId=${chapterId}`,
+      });
+    },
     onScrolltolower() {
       if (this.list.length < this.total) {
         this.page++;

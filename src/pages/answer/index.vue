@@ -117,7 +117,10 @@ import {
   createIndependent,
   createDailyClock,
   createChallenge,
+  getUserTopicRecord,
+  submitWrongQuestion,
 } from "@/api/index";
+import { mapActions } from "vuex";
 export default {
   name: "answer",
   components: {
@@ -150,6 +153,10 @@ export default {
       // 倒计时时间
       time: 0,
       isEndCount: 0,
+      // 收藏夹&错题集 是否是解析模式
+      isAnalysis: 0,
+      // 历年真题是否是考试模式
+      isExam: 0,
     };
   },
   watch: {
@@ -174,19 +181,30 @@ export default {
     this.setCurrentModel();
   },
 
-  onLoad({ chapterId, title = "题目", type = 1, time = 0, isExam }) {
+  onLoad({
+    chapterId,
+    title = "题目",
+    type = 1,
+    time = 0,
+    isExam,
+    isAnalysis,
+  }) {
     this.type = type;
     this.time = time;
     this.isExam = isExam;
+    this.isAnalysis = isAnalysis;
     uni.setNavigationBarTitle({
       title,
     });
     this.createQuestion(chapterId, isExam);
   },
   onUnload() {
-    this.settlement();
+    if (!["7", "8"].includes(this.type)) {
+      this.settlement();
+    }
   },
   methods: {
+    ...mapActions(["setQusetionList"]),
     setCurrentModel() {
       // model 1:刷题模式，2：考试模式 3：解析模式
       if (this.type === "1") {
@@ -220,6 +238,18 @@ export default {
       if (this.type === "6") {
         this.model = "1";
       }
+      if (this.type === "7") {
+        this.model = "1";
+        if (this.isAnalysis === "1") {
+          this.model = "3";
+        }
+      }
+      if (this.type === "8") {
+        this.model = "1";
+        if (this.isAnalysis === "1") {
+          this.model = "3";
+        }
+      }
     },
     onTimeOut() {
       Dialog.alert({
@@ -232,6 +262,10 @@ export default {
     },
     // 提交其他题型答案
     submitOtherAnswer() {
+      if (this.type === "7") {
+        // 收藏夹不用提交答案
+        return;
+      }
       if (this.hasSettlement) {
         return;
       }
@@ -246,7 +280,10 @@ export default {
     },
     // 单选跟判断题答案提交
     onSingleChange(answer, id) {
-      this.submitAnswer(id, [answer]);
+      // 收藏夹不用提交答案
+      if (this.type !== "7") {
+        this.submitAnswer(id, [answer]);
+      }
       this.questionList[this.currentIndex].userAnswer = answer;
       this.handleNext();
     },
@@ -320,7 +357,7 @@ export default {
       const data = {
         log_id: this.logId,
       };
-      const res = await settlement(data);
+      await settlement(data);
     },
     // 提交答案
     async submitAnswer(topic_id, answer) {
@@ -329,7 +366,9 @@ export default {
         topic_id,
         answer,
       };
-      const res = await submitAnswer(data);
+      // 错题集答案提交用 submitWrongQuestion
+      const api = this.type === "8" ? submitWrongQuestion : submitAnswer;
+      await api(data);
       // 已提交的重置掉
       this.userAnswerMap[topic_id] && (this.userAnswerMap[topic_id] = null);
     },
@@ -339,6 +378,12 @@ export default {
         chapter_id,
         is_exam,
       };
+      if (this.type === "7") {
+        data.is_collection = 1; // 收藏夹
+      }
+      if (this.type === "8") {
+        data.is_collection = 1; // 错题集
+      }
       const api = {
         1: createPractice,
         2: createMockExam,
@@ -346,6 +391,8 @@ export default {
         4: createIndependent,
         5: createDailyClock,
         6: createChallenge,
+        7: getUserTopicRecord,
+        8: getUserTopicRecord,
       };
       const res = await api[this.type](data);
       const topic_list = res.data.topic_list;
@@ -355,6 +402,10 @@ export default {
       });
       this.total = res.data.total;
       this.logId = res.data.log_id;
+      // 收藏夹错题集的答题卡数据
+      if (["7", "8"].includes(this.type)) {
+        this.setQusetionList(topic_list);
+      }
     },
     toTestResoult() {
       this.duration = 0;
@@ -368,8 +419,13 @@ export default {
       this.submitOtherAnswer();
       this.duration = 0;
       this.$nextTick(() => {
+        let isRequest = 1;
+        // 收藏夹错题集的答题卡不用请求
+        if (["7", "8"].includes(this.type)) {
+          isRequest = 0;
+        }
         uni.navigateTo({
-          url: `/pages/answerSheet/index?logId=${this.logId}&model=${this.model}`,
+          url: `/pages/answerSheet/index?logId=${this.logId}&model=${this.model}&isRequest=${isRequest}`,
         });
       });
     },
