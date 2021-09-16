@@ -54,6 +54,8 @@ export default {
       if (res.error_code === 0) {
         this.setUserInfo(res.data);
         this.getAppInfo();
+        uni.setStorageSync("iv", "");
+        uni.setStorageSync("encryptedData", "");
         uni.switchTab({
           url: "/pages/index/index",
         });
