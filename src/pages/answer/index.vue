@@ -406,7 +406,7 @@ export default {
         data.is_collection = 1; // 收藏夹
       }
       if (this.type === "8") {
-        data.is_collection = 1; // 错题集
+        data.is_collection = 0; // 错题集
       }
       const api = {
         1: createPractice,
