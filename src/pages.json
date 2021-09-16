@@ -12,6 +12,20 @@
 			}
 		},
 		{
+			"path": "pages/login/getPhone",
+			"style": {
+				"navigationBarTitleText": "授权手机号",
+				"usingComponents": {}
+			}
+		},
+		{
+			"path": "pages/login/agreement",
+			"style": {
+				"navigationBarTitleText": "隐私协议",
+				"usingComponents": {}
+			}
+		},
+		{
 			"path": "pages/author/index",
 			"style": {
 				"navigationBarTitleText": "关于我们",
@@ -55,7 +69,9 @@
 			"style": {
 				"navigationBarTitleText": "登录",
 				"usingComponents": {
-					"van-button": "/wxcomponents/vant/button/index"
+					"van-button": "/wxcomponents/vant/button/index",
+					"van-radio": "/wxcomponents/vant/radio/index",
+					"van-radio-group": "/wxcomponents/vant/radio-group/index"
 				}
 			}
 		},

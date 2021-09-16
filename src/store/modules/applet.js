@@ -1,6 +1,5 @@
 import { getVersion } from "@/api/user";
 const appId = process.env.VUE_APP_APPID
-console.log(appId)
 const applet = {
     state: {
         appInfo: {}
