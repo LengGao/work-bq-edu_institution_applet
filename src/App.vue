@@ -2,10 +2,10 @@
 import { mapActions } from "vuex";
 export default {
   onLaunch: function () {
-    this.getAppInfo();
     console.log("App Launch");
   },
   onShow: function () {
+    this.getAppInfo();
     console.log("App Show");
   },
   onHide: function () {

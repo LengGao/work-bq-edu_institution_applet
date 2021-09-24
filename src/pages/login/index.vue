@@ -21,17 +21,20 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import { getSign } from "@/api/user";
 export default {
   data() {
     return {
       userInfo: null,
       radioVal: "",
       active: "",
+      wxCode: null,
     };
   },
   computed: {
     ...mapGetters(["appInfo"]),
+  },
+  onLoad() {
+    this.wxLogin();
   },
   methods: {
     to() {
@@ -48,10 +51,24 @@ export default {
       if (iv) {
         uni.setStorageSync("iv", iv);
         uni.setStorageSync("encryptedData", encryptedData);
+        uni.setStorageSync("wxCode", this.wxCode);
         uni.navigateTo({
           url: `/pages/login/getPhone`,
         });
       }
+    },
+    wxLogin() {
+      uni.login({
+        success: (res) => {
+          this.wxCode = res.code;
+        },
+        fail: () => {
+          uni.showToast({
+            icon: "error",
+            title: "登录失败",
+          });
+        },
+      });
     },
     wxGetUserInfo() {
       return new Promise((resolve, reject) => {

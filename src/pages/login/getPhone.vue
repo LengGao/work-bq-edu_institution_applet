@@ -24,7 +24,6 @@ import { getSign } from "@/api/user";
 export default {
   data() {
     return {
-      wxCode: null,
       userInfo: null,
       phoneInfo: null,
     };
@@ -32,14 +31,12 @@ export default {
   computed: {
     ...mapGetters(["organization_id", "appInfo"]),
   },
-  onLoad() {
-    this.wxLogin();
-  },
+
   methods: {
     ...mapActions(["setUserInfo", "getAppInfo"]),
     async getSign() {
       const data = {
-        code: this.wxCode,
+        code: uni.getStorageSync("wxCode"),
         organization_id: this.organization_id,
         mobile: {
           iv: this.phoneInfo.iv,
@@ -91,19 +88,6 @@ export default {
           success: resolve,
           fail: reject,
         });
-      });
-    },
-    wxLogin() {
-      uni.login({
-        success: (res) => {
-          this.wxCode = res.code;
-        },
-        fail: () => {
-          uni.showToast({
-            icon: "error",
-            title: "登录失败",
-          });
-        },
       });
     },
   },

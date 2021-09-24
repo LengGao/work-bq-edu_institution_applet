@@ -72,14 +72,6 @@ export default {
   computed: {
     ...mapGetters(["userInfo", "appInfo"]),
   },
-  onLoad() {},
-  onShareAppMessage() {
-    return {
-      title: this.appInfo.app_name,
-      path: "/pages/index/index",
-      imageUrl: this.appInfo.logo,
-    };
-  },
   methods: {
     toLogin() {
       uni.redirectTo({

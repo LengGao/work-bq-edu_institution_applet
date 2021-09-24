@@ -59,7 +59,7 @@
           <view class="question-item-value">{{ practice.correct_rate }}%</view>
         </view>
         <view class="question-item img">
-          <image class="icon-zj" src="../../static/icon-zjlx.png" />
+          <image class="icon-zj" src="../../static/icon-zjlx.gif" />
           <view class="question-item-value">开始练习</view>
         </view>
       </view>
@@ -159,13 +159,15 @@ export default {
   onShow() {
     this.hasQuestionId();
   },
-  onLoad() {
-    uni.setNavigationBarTitle({
-      title: this.appInfo.app_name,
-    });
-  },
   computed: {
     ...mapGetters(["appInfo", "questionBankInfo"]),
+  },
+  watch: {
+    "appInfo.app_name"(val) {
+      uni.setNavigationBarTitle({
+        title: val,
+      });
+    },
   },
   methods: {
     hasQuestionId() {
