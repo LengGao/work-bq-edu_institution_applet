@@ -89,8 +89,7 @@ export default {
     align-items: center;
     margin: 60rpx 0 140rpx 0;
     image {
-      width: 320rpx;
-      height: 94rpx;
+      height: 100rpx;
     }
   }
   .bc-img {

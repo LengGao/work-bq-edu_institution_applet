@@ -27,13 +27,13 @@ export default {
 <style lang="less" scoped>
 @import "@/styles/var";
 .agreement {
-  padding: 30rpx;
   font-size: 28rpx;
   line-height: 1.5;
   height: 100%;
   box-sizing: border-box;
   .content {
-    height: calc(100% - 60px);
+    padding: 30rpx;
+    height: calc(100% - 60px - 60rpx);
     overflow-y: auto;
   }
   .btn {
