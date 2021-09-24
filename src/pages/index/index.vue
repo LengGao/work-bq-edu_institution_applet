@@ -163,10 +163,13 @@ export default {
     ...mapGetters(["appInfo", "questionBankInfo"]),
   },
   watch: {
-    "appInfo.app_name"(val) {
-      uni.setNavigationBarTitle({
-        title: val,
-      });
+    "appInfo.app_name": {
+      handler(val) {
+        uni.setNavigationBarTitle({
+          title: val,
+        });
+      },
+      immediate: true,
     },
   },
   methods: {
