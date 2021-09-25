@@ -1,5 +1,4 @@
 import store from '@/store'
-console.log(process.env.VUE_APP_BASE_API)
 const toLogin = () => {
     uni.redirectTo({
         url: "/pages/login/index"
@@ -15,7 +14,7 @@ const toNoPermission = () => {
         url: `/pages/noPermission/index`,
     });
 }
-const errMap = {
+const errorHandler = {
     '-1': toLogin,
     '-2': toNoPermission,
     '-3': toQuestionBank
@@ -40,12 +39,11 @@ const requset = (options) => new Promise((resolve, reject) => {
         success: (response) => {
             const data = response.data
             if (data.error_code !== 0) {
-                errMap[data.error_code] && errMap[data.error_code]()
+                errorHandler[data.error_code] && errorHandler[data.error_code]()
                 uni.showToast({
                     icon: 'none',
                     title: data.message
                 })
-                console.log('error', data)
                 reject(data)
             }
             resolve(data)

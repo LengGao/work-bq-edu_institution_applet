@@ -1,5 +1,6 @@
 import { getVersion } from "@/api/user";
 const appId = process.env.VUE_APP_APPID
+const version = process.env.VUE_APP_VERSION
 const applet = {
     state: {
         appInfo: {}
@@ -10,9 +11,11 @@ const applet = {
         }
     },
     actions: {
-        async getAppInfo({ commit, dispatch }) {
+        async getAppInfo({ commit, dispatch }, debug) {
             const data = {
                 appId,
+                version,
+                debug // debug 用于审核模式时登录
             };
             const res = await getVersion(data);
             commit('SET_INFO', res.data)

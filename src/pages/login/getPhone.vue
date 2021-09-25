@@ -50,16 +50,16 @@ export default {
       const res = await getSign(data);
       if (res.error_code === 0) {
         this.setUserInfo(res.data);
-        this.getAppInfo();
-        uni.setStorageSync("iv", "");
-        uni.setStorageSync("encryptedData", "");
+        this.getAppInfo(0);
+        uni.removeStorageSync("wxCode");
+        uni.removeStorageSync("encryptedData");
+        uni.removeStorageSync("iv");
         uni.switchTab({
           url: "/pages/index/index",
         });
       }
     },
     async getUserInfo(e) {
-      console.log(111111111);
       const res = await this.wxGetUserInfo();
       if (res) {
         this.userInfo = res;

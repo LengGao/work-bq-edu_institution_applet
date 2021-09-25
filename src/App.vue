@@ -3,9 +3,9 @@ import { mapActions } from "vuex";
 export default {
   onLaunch: function () {
     console.log("App Launch");
+    this.getAppInfo();
   },
   onShow: function () {
-    this.getAppInfo();
     console.log("App Show");
   },
   onHide: function () {
