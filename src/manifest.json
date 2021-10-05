@@ -60,6 +60,12 @@
 				}
 			]
 		},
+		"plugins": {
+			"miniprogram-thirdparty-plugin": {
+				"version": "0.3.13", // 必须是小程序服务商组件最新版本号，微信开发者工具调试时可获取最新版本号（复制时请去掉注释）
+				"provider": "wxb8b928431b8c56d8" // 必须填小程序服务商组件appid，不要修改（复制时请去掉注释）
+			}
+		},
 		"usingComponents": true
 	},
 	"mp-alipay": {
