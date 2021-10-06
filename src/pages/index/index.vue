@@ -292,9 +292,6 @@ export default {
       }
       .question-item {
         flex: 1;
-        &:last-child {
-          margin-left: 20rpx;
-        }
         &-title {
           color: #999;
           font-size: 24rpx;
@@ -304,7 +301,10 @@ export default {
           font-size: 40rpx;
         }
         &.img {
+          margin-left: 20rpx;
+          padding-left: 16rpx;
           position: relative;
+          right: -16rpx;
           text-align: center;
           &:active {
             opacity: 0.8;

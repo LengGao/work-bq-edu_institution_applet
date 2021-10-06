@@ -2,7 +2,12 @@
   <view class="mock-examination">
     <image class="b-img" src="../../static/mock-background.png"></image>
     <view class="mock-examination-header"> </view>
-    <scroll-view class="record-list" scroll-y @scrolltolower="onScrolltolower">
+    <scroll-view
+      class="record-list"
+      scroll-y
+      @scrolltolower="onScrolltolower"
+      v-if="list.length"
+    >
       <view class="record-title">模拟考试历史记录</view>
       <view class="record-list-item" v-for="item in list" :key="item.id">
         <view class="record-info">
@@ -21,8 +26,8 @@
           <text class="iconfont">&#xe66b;</text>
         </view> -->
       </view>
-      <NoData top="50%" v-if="!list.length">暂无考试记录</NoData>
     </scroll-view>
+    <NoData top="40%" v-else>暂无考试记录</NoData>
     <view class="footer">
       <view class="btn-primary" @click="toTestConfig">智能组卷</view>
     </view>

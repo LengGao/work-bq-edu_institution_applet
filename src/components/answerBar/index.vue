@@ -62,7 +62,7 @@ export default {
   border-top: @border;
   font-size: 24rpx;
   text-align: center;
-  background: #efefef;
+  background: #fff;
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
 }

@@ -5,6 +5,7 @@ export const getPanelStatistical = (data) => {
         url: 'Topic/panelStatistical',
         method: 'get',
         data,
+        loading: true
     })
 }
 // 获取题库列表
@@ -21,6 +22,7 @@ export const getChapterList = (data) => {
         url: 'practice/chapter',
         method: 'get',
         data,
+        loading: true
     })
 }
 // 获取打卡数据
@@ -37,6 +39,7 @@ export const getRealTestPapers = (data) => {
         url: 'RealTopic/realTestPapers',
         method: 'get',
         data,
+        loading: true
     })
 }
 // 模拟考试记录列表
@@ -45,6 +48,7 @@ export const getMockExamHistory = (data) => {
         url: 'MockExam/history',
         method: 'get',
         data,
+        loading: true
     })
 }
 // 自主出题题目列表
@@ -53,6 +57,7 @@ export const getIndependentPapers = (data) => {
         url: 'independent/independentPapers',
         method: 'get',
         data,
+        loading: true
     })
 }
 // 刷题挑战排行榜列表
@@ -61,6 +66,7 @@ export const getRankList = (data) => {
         url: 'Challenge/rank',
         method: 'get',
         data,
+        loading: true
     })
 }
 // 刷题挑战排行榜-我的成绩
@@ -77,6 +83,7 @@ export const getFavoritesList = (data) => {
         url: 'UserTopicRecord/chapter',
         method: 'get',
         data,
+        loading: true
     })
 }
 // 生成章节练习题目
@@ -127,6 +134,7 @@ export const testExamConfig = (data) => {
         url: 'mockExam/testExamConfig',
         method: 'post',
         data,
+        loading: true
     })
 }
 // 生成模拟考试题目
@@ -144,6 +152,7 @@ export const getOverYearConfig = (data) => {
         url: 'RealTopic/testExamConfig',
         method: 'get',
         data,
+        loading: true
     })
 }
 // 生成历年真题题目
@@ -161,6 +170,7 @@ export const getIndependentConfig = (data) => {
         url: 'independent/testExamConfig',
         method: 'get',
         data,
+        loading: true
     })
 }
 // 生成自主出题题目

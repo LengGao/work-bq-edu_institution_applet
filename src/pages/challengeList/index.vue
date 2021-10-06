@@ -91,15 +91,19 @@ export default {
       },
       page: 1,
       total: 0,
+      isOnload: false,
     };
   },
   onShow() {
-    setTimeout(() => {
-      this.getRankList();
-      this.getSelfAchievement();
-    }, 1000);
+    !this.isOnload &&
+      setTimeout(() => {
+        this.getRankList();
+        this.getSelfAchievement();
+      }, 1000);
+    this.isOnload = false;
   },
   onLoad() {
+    this.isOnload = true;
     this.getRankList();
     this.getSelfAchievement();
   },

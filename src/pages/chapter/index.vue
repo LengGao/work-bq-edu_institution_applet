@@ -22,7 +22,7 @@
         <view class="info-item-title">准确率</view>
       </view>
     </view>
-    <view class="chapter-container">
+    <view class="chapter-container" v-if="chapterList.length">
       <view class="chapter-list">
         <view
           class="chapter-list-item"
@@ -54,7 +54,7 @@
         </view>
       </view>
     </view>
-    <NoData top="40%" v-if="!chapterList.length" />
+    <NoData top="40%" v-else />
     <van-dialog id="van-dialog" />
   </view>
 </template>

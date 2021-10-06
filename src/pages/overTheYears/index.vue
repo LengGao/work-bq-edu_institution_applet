@@ -2,7 +2,7 @@
   <scroll-view scroll-y class="over-years" @scrolltolower="onScrolltolower">
     <image class="b-img" src="../../static/over-year-background.png"></image>
     <view class="over-years-header"> </view>
-    <view class="question-list">
+    <view class="question-list" v-if="list.length">
       <view
         class="question-list-item"
         v-for="item in list"
@@ -27,7 +27,7 @@
         </view>
       </view>
     </view>
-    <NoData top="40%" v-if="!list.length" />
+    <NoData top="40%" v-else />
   </scroll-view>
 </template>
 <script>

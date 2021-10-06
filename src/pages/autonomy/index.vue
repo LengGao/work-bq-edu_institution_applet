@@ -2,7 +2,7 @@
   <scroll-view scroll-y class="autonomy" @scrolltolower="onScrolltolower">
     <image class="b-img" src="../../static/autonomy-background.png"></image>
     <view class="autonomy-header"> </view>
-    <view class="question-list">
+    <view class="question-list" v-if="list.length">
       <view
         class="question-list-item"
         v-for="item in list"
@@ -27,7 +27,7 @@
         </view>
       </view>
     </view>
-    <NoData v-if="!list.length" />
+    <NoData top="40%" v-else />
   </scroll-view>
 </template>
 <script>
