@@ -70,7 +70,6 @@
             v-if="item.topic_type === 6"
           />
           <!-- :current="caseIndex" -->
-
           <Case
             :model="model"
             :options="item"
@@ -79,6 +78,9 @@
             v-if="item.topic_type === 7"
             :ref="`case-${item.id}`"
             :is-active="currentIndex === index && duration === 300"
+            :type="type"
+            @change="onCaseChange"
+            @index-change="onCaseIndexChange"
           />
         </block>
       </swiper-item>
@@ -90,7 +92,7 @@
       @prev="handlePrev"
       @collect="setCollection"
       :show-time="model === '2'"
-      :isCollection="!!questionList[currentIndex].is_collection"
+      :isCollection="!!getCurrentData.is_collection"
     >
       <van-count-down :time="time" @finish="onTimeOut" />
     </AnswerBar>
@@ -160,6 +162,18 @@ export default {
       isExam: 0,
     };
   },
+  computed: {
+    // 获取当前显示的题目。案例题按小题算
+    getCurrentData() {
+      const currentData = this.questionList[this.currentIndex];
+      if (!currentData) {
+        return {};
+      }
+      return currentData.topic_type === 7
+        ? currentData.child[this.caseIndex]
+        : currentData;
+    },
+  },
   watch: {
     isEndCount(val) {
       if (val > 1 && this.type === "6") {
@@ -200,11 +214,10 @@ export default {
     this.duration = 300;
     this.setCurrentModel();
   },
-
   onLoad({
     chapterId,
     title = "题目",
-    type = 1,
+    type = "1",
     time = 0,
     isExam,
     isAnalysis,
@@ -294,6 +307,14 @@ export default {
         this.userAnswerMap[id] && this.submitAnswer(id, this.userAnswerMap[id]);
       }
     },
+    // 案例题里的index
+    onCaseIndexChange(index) {
+      this.caseIndex = index;
+    },
+    // 案例题的用户答案
+    onCaseChange(index, answer) {
+      this.questionList[this.currentIndex].child[index].userAnswer = answer;
+    },
     // 收集其他题型答案
     onOtherChange(answer, id) {
       this.userAnswerMap[id] = answer;
@@ -357,20 +378,21 @@ export default {
     onSwiperChange({ detail }) {
       const { current } = detail;
       this.currentIndex = current;
+      this.caseIndex = 0;
       this.$nextTick(() => {
         this.submitOtherAnswer();
       });
     },
+
     // 题目收藏
     async setCollection() {
-      const { id: topic_id, is_collection } =
-        this.questionList[this.currentIndex];
+      const { id: topic_id, is_collection } = this.getCurrentData;
       const data = {
         topic_id,
         is_collection: +!is_collection,
       };
       const res = await setCollection(data);
-      this.questionList[this.currentIndex].is_collection = data.is_collection;
+      this.getCurrentData.is_collection = data.is_collection;
       uni.showToast({
         title: res.message,
       });

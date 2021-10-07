@@ -10,7 +10,12 @@
       </view>
       <view class="child-header">
         <view class="child-header-title"
-          >案例题 {{ serialNumber }}-{{ currentIndex + 1 }}</view
+          >案例题 {{ serialNumber }}-{{ currentIndex + 1 }}
+          <text class="text"
+            >（{{
+              typeMap[options.child[currentIndex].topic_child_type]
+            }}）</text
+          ></view
         >
         <view class="child-header-actions">
           <view class="prev" @click="handlePrev">上一题</view>
@@ -25,11 +30,6 @@
         duration="300"
         @animationfinish="onAnimationfinish"
       >
-        <!-- <swiper-item class="swiper-item">
-          <scroll-view scroll-y class="scroll-view">
-            <Single />
-          </scroll-view>
-        </swiper-item> -->
         <swiper-item
           class="swiper-item"
           v-for="(item, index) in options.child"
@@ -37,31 +37,37 @@
         >
           <scroll-view scroll-y class="scroll-view">
             <Single
+              :model="model"
               :options="item"
               @change="onSingleChange"
               v-if="item.topic_child_type === 1"
             />
             <Multiple
+              :model="model"
               :options="item"
               @change="onOtherChange"
               v-if="item.topic_child_type === 2"
             />
             <Judg
+              :model="model"
               :options="item"
               @change="onSingleChange"
               v-if="item.topic_child_type === 3"
             />
             <Indefinite
+              :model="model"
               :options="item"
               @change="onOtherChange"
               v-if="item.topic_child_type === 4"
             />
             <Completion
+              :model="model"
               :options="item"
               @change="onOtherChange"
               v-if="item.topic_child_type === 5"
             />
             <Short
+              :model="model"
               :options="item"
               @change="onOtherChange"
               v-if="item.topic_child_type === 6"
@@ -121,6 +127,14 @@ export default {
       type: Boolean,
       default: false,
     },
+    model: {
+      type: String,
+      default: "1",
+    },
+    type: {
+      type: String,
+      default: "1",
+    },
   },
   watch: {
     current(newValue) {
@@ -139,6 +153,15 @@ export default {
       currentIndex: 0,
       userAnswerMap: {},
       total: 0,
+      typeMap: {
+        1: "单选题",
+        2: "多选题",
+        3: "判断题",
+        4: "不定项题",
+        5: "填空题",
+        6: "简答题",
+        7: "案例题",
+      },
     };
   },
   created() {
@@ -154,11 +177,16 @@ export default {
     // 收集其他题型答案
     onOtherChange(answer, id) {
       this.userAnswerMap[id] = answer;
+      this.$emit("change", this.currentIndex, answer);
     },
     // 单选跟判断题答案提交
     onSingleChange(answer, id) {
-      this.submitAnswer(id, [answer]);
-      this.handleNext();
+      // 收藏夹不用提交答案
+      if (this.type !== "7") {
+        this.submitAnswer(id, [answer]);
+      }
+      this.$emit("change", this.currentIndex, answer);
+      this.model === "2" && this.handleNext();
     },
     onSwiperChange({ detail }) {
       const { current } = detail;
@@ -166,6 +194,7 @@ export default {
       this.$nextTick(() => {
         this.submitOtherAnswer();
       });
+      this.$emit("indexChange", current);
     },
     // 提交答案
     async submitAnswer(topic_id, answer) {
@@ -288,6 +317,9 @@ export default {
     color: @primary;
     &-title {
       font-weight: bold;
+      .text {
+        font-size: 24rpx;
+      }
     }
     &-actions {
       display: flex;
