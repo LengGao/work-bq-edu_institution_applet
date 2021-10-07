@@ -22,7 +22,9 @@
 			"path": "pages/login/agreement",
 			"style": {
 				"navigationBarTitleText": "隐私协议",
-				"usingComponents": {}
+				"usingComponents": {
+					"van-button": "/wxcomponents/vant/button/index"
+				}
 			}
 		},
 		{

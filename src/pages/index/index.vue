@@ -301,8 +301,7 @@ export default {
           font-size: 40rpx;
         }
         &.img {
-          margin-left: 20rpx;
-          padding-left: 16rpx;
+          padding-left: 26rpx;
           position: relative;
           right: -16rpx;
           text-align: center;

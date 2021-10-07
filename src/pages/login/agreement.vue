@@ -3,7 +3,16 @@
     <view class="content">
       <u-parse :content="appInfo.treaty || '无'" />
     </view>
-    <button class="btn" type="primary" @click="back">我已知悉</button>
+    <van-button
+      class="btn"
+      color="#199fff"
+      round
+      block
+      plain
+      type="info"
+      @click="back"
+      >我已知悉</van-button
+    >
   </view>
 </template>
 <script>
@@ -37,8 +46,9 @@ export default {
     overflow-y: auto;
   }
   .btn {
-    width: 500rpx;
-    margin-top: 20rpx;
+    /deep/.van-button--block {
+      width: 500rpx;
+    }
   }
 }
 </style>

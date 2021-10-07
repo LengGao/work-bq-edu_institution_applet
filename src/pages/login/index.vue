@@ -18,7 +18,9 @@
     <view class="tips"> 申请获取您的公开信息(昵称、头像等) </view>
     <view class="view">
       <van-radio-group :value="active" @change="onChecked">
-        <van-radio name="1" shape="square">我已阅读并同意</van-radio>
+        <van-radio name="1" icon-size="30rpx" shape="square"
+          >我已阅读并同意</van-radio
+        >
       </van-radio-group>
       <view class="link" @click="to">《用户协议和隐私政策》</view>
     </view>
