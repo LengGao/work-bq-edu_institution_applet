@@ -345,11 +345,14 @@ export default {
           font-size: 24rpx;
           margin-left: 12rpx;
         }
-        image {
+        .avatar {
           width: 40rpx;
           height: 40rpx;
           border-radius: 50%;
           border: 1rpx solid #ddd;
+          &:not(:first-child) {
+            margin-left: -10rpx;
+          }
         }
       }
       &-right {
