@@ -6,7 +6,13 @@
     <view class="bc-img">
       <image src="../../static/auth-bc.png" />
     </view>
-    <button class="btn" @click="getUserInfo" :disabled="!active" type="primary">
+    <button
+      class="btn"
+      :loading="loading"
+      @click="getUserInfo"
+      :disabled="!active"
+      type="primary"
+    >
       授权登录
     </button>
     <view class="tips"> 申请获取您的公开信息(昵称、头像等) </view>
@@ -20,7 +26,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -28,6 +34,7 @@ export default {
       radioVal: "",
       active: "",
       wxCode: null,
+      loading: false,
     };
   },
   computed: {
@@ -46,8 +53,11 @@ export default {
       this.active = this.active === "1" ? "" : "1";
     },
     async getUserInfo() {
-      const { iv, encryptedData } = await this.wxGetUserInfo();
-      console.log(encryptedData);
+      this.loading = true;
+      const { iv, encryptedData } = await this.wxGetUserInfo().catch(() => {
+        this.loading = false;
+      });
+      this.loading = false;
       if (iv) {
         uni.setStorageSync("iv", iv);
         uni.setStorageSync("encryptedData", encryptedData);
@@ -89,7 +99,7 @@ export default {
   align-items: center;
   justify-content: center;
   font-size: 28rpx;
-  margin-top: 60rpx;
+  margin-top: 100rpx;
   /deep/.van-radio__label {
     color: #999999;
   }
