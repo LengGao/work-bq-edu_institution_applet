@@ -20,24 +20,27 @@ const errorHandler = {
     '-3': toQuestionBank
 }
 const requset = (options) => new Promise((resolve, reject) => {
-    if (options.auth !== false && !store.getters.token) {
+    const { auth = true, loading, data, header = {}, url } = options
+    if (auth !== false && !store.getters.token) {
         toLogin()
         return
     }
-    options.loading && uni.showLoading({
+    loading && uni.showLoading({
         title: "加载中",
     });
     uni.request({
         ...options,
-        data: Object.assign({
+        data: {
+            ...data,
             question_bank_id: store.getters.question_bank_id
-        }, options.data),
-        header: Object.assign({
+        },
+        header: {
+            ...header,
             token: store.getters.token
-        }, options.header),
-        url: process.env.VUE_APP_BASE_API + options.url,
+        },
+        url: process.env.VUE_APP_BASE_API + url,
         success: (response) => {
-            const data = response.data
+            const { data } = response
             if (data.error_code !== 0) {
                 errorHandler[data.error_code] && errorHandler[data.error_code]()
                 uni.showToast({
@@ -56,7 +59,7 @@ const requset = (options) => new Promise((resolve, reject) => {
             reject(error)
         },
         complete: () => {
-            options.loading && uni.hideLoading()
+            loading && uni.hideLoading()
         }
     })
 })
