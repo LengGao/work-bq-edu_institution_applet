@@ -1,6 +1,6 @@
 <template>
   <view class="index">
-    <view class="header" @click="toType">
+    <view class="header" @click="toSelectId">
       <text class="iconfont">&#xe64f;</text>
       <text class="title">{{ questionBankInfo.question_bank_name }}</text>
       <van-icon name="arrow-down" />
@@ -175,7 +175,7 @@ export default {
   methods: {
     hasQuestionId() {
       if (!this.questionBankInfo.question_bank_id) {
-        this.toType();
+        this.toSelectId();
       } else {
         this.getPanelStatistical();
       }
@@ -198,7 +198,7 @@ export default {
         url: `/pages/${path}/index`,
       });
     },
-    toType() {
+    toSelectId() {
       uni.redirectTo({
         url: `/pages/selectQuestionBank/index`,
       });
