@@ -1,5 +1,5 @@
 import { getVersion } from "@/api/user";
-// const appId = process.env.VUE_APP_APPID
+let appId = process.env.VUE_APP_APPID
 const version = process.env.VUE_APP_VERSION
 const applet = {
     state: {
@@ -16,7 +16,9 @@ const applet = {
     },
     actions: {
         async getAppInfo({ commit, dispatch, state }, { appid, debug }) {
-            let appId = state.appid
+            if (state.appid) {
+                appId = state.appid
+            }
             if (appid) {
                 appId = appid
                 commit('SET_APPID', appid)
