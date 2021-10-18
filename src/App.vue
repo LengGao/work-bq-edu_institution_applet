@@ -3,7 +3,9 @@ import { mapActions } from "vuex";
 export default {
   onLaunch: function () {
     console.log("App Launch");
-    this.getAppInfo();
+    const { appid } = wx.getExtConfigSync ? wx.getExtConfigSync() : {};
+    console.log(appid);
+    this.getAppInfo({ appid });
   },
   onShow: function () {
     console.log("App Show");

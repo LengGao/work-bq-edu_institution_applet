@@ -50,7 +50,7 @@ export default {
       const res = await getSign(data);
       if (res.error_code === 0) {
         this.setUserInfo(res.data);
-        this.getAppInfo(0);
+        this.getAppInfo({ debug: 0 });
         uni.removeStorageSync("wxCode");
         uni.removeStorageSync("encryptedData");
         uni.removeStorageSync("iv");
