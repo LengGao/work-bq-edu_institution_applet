@@ -12,6 +12,39 @@
 			}
 		},
 		{
+			"path": "pages/autonomy/index",
+			"style": {
+				"navigationBarTitleText": "自主出题",
+				"navigationStyle": "custom",
+				"usingComponents": {
+					"van-nav-bar": "/wxcomponents/vant/nav-bar/index",
+					"van-icon": "/wxcomponents/vant/icon/index"
+				}
+			}
+		},
+		{
+			"path": "pages/mockExamination/index",
+			"style": {
+				"navigationBarTitleText": "模拟考试",
+				"navigationStyle": "custom",
+				"usingComponents": {
+					"van-nav-bar": "/wxcomponents/vant/nav-bar/index",
+					"van-icon": "/wxcomponents/vant/icon/index"
+				}
+			}
+		},
+		{
+			"path": "pages/overTheYears/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "历年真题",
+				"usingComponents": {
+					"van-nav-bar": "/wxcomponents/vant/nav-bar/index",
+					"van-icon": "/wxcomponents/vant/icon/index"
+				}
+			}
+		},
+		{
 			"path": "pages/login/getPhone",
 			"style": {
 				"navigationBarTitleText": "授权手机号",
@@ -41,13 +74,6 @@
 				"usingComponents": {
 					"van-button": "/wxcomponents/vant/button/index"
 				}
-			}
-		},
-		{
-			"path": "pages/mockExamination/index",
-			"style": {
-				"navigationBarTitleText": "模拟考试",
-				"usingComponents": {}
 			}
 		},
 		{
@@ -94,26 +120,10 @@
 			}
 		},
 		{
-			"path": "pages/autonomy/index",
-			"style": {
-				"navigationBarTitleText": "自主出题",
-				"usingComponents": {},
-				"navigationBarBackgroundColor": "#243CF8"
-			}
-		},
-		{
 			"path": "pages/brushQuestionChallenge/index",
 			"style": {
 				"navigationBarTitleText": "刷题挑战",
 				"usingComponents": {}
-			}
-		},
-		{
-			"path": "pages/overTheYears/index",
-			"style": {
-				"navigationBarTitleText": "历年真题",
-				"usingComponents": {},
-				"navigationBarBackgroundColor": "#605CF7"
 			}
 		},
 		{

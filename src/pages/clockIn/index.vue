@@ -44,9 +44,9 @@
       </view>
       <view class="desc">
         <view class="desc-title">———— 打卡说明 ————</view>
+        <view class="desc-item">题目均为单选题</view>
         <view class="desc-item">每天只能打卡一次，00:00更新数据</view>
         <view class="desc-item">每次推荐一个知识点，包括15个题目</view>
-        <view class="desc-item">题目均为单选题，提交打卡后可以查看解析</view>
       </view>
     </view>
   </div>
