@@ -250,6 +250,7 @@ export default {
       display: flex;
       align-items: center;
       color: @primary;
+      font-weight: bold;
       &::before {
         content: "";
         width: 8rpx;
