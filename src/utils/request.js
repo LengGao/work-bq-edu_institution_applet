@@ -28,6 +28,7 @@ const requset = (options) => new Promise((resolve, reject) => {
     loading && uni.showLoading({
         title: "加载中",
     });
+    console.log(`${url} >>参数：`, data)
     uni.request({
         ...options,
         data: {
@@ -41,6 +42,7 @@ const requset = (options) => new Promise((resolve, reject) => {
         url: process.env.VUE_APP_BASE_API + url,
         success: (response) => {
             const { data } = response
+            console.log(`${url} >>success：`, data)
             if (data.error_code !== 0) {
                 errorHandler[data.error_code] && errorHandler[data.error_code]()
                 uni.showToast({
@@ -52,6 +54,7 @@ const requset = (options) => new Promise((resolve, reject) => {
             resolve(data)
         },
         fail: (error) => {
+            console.log(`${url} >>error：`, error)
             uni.showToast({
                 icon: 'error',
                 title: error.errMsg || '稍后再试'
