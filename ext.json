@@ -1,0 +1,8 @@
+{
+    "extEnable": true,
+    "extAppid": "wxb8322f5e02dbbc3d",
+    "directCommit": false,
+    "ext": {
+        "appid": "wxbb1d55f3c438f37c" // 需要调试的小程序appid  调试指定小程序时需要复制一份手动放在小程序根目录
+    }
+}
