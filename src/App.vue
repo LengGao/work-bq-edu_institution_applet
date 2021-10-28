@@ -1,11 +1,18 @@
 <script>
 import { mapActions } from "vuex";
 export default {
-  onLaunch: function () {
+  onLaunch: function ({ query }) {
+    const { is_share, question_bank_id, question_bank_name } = query;
+    if (question_bank_id) {
+      this.$store.dispatch("setQuestionBankInfo", {
+        question_bank_id,
+        question_bank_name,
+      });
+    }
     console.log("App Launch");
     const { appid } = wx.getExtConfigSync ? wx.getExtConfigSync() : {};
     console.log(appid);
-    this.getAppInfo({ appid });
+    this.getAppInfo({ appid, debug: is_share });
   },
   onShow: function () {
     console.log("App Show");

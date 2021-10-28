@@ -19,8 +19,16 @@ const errorHandler = {
     '-2': toNoPermission,
     '-3': toQuestionBank
 }
-const requset = (options) => new Promise((resolve, reject) => {
+const sleep = (time) => new Promise(resolve => {
+    setTimeout(resolve, time);
+})
+const requset = (options) => new Promise(async (resolve, reject) => {
     const { auth = true, loading, data, header = {}, url } = options
+    // 等一下sign/getVersion 接口请求结果
+    if (!store.getters.organization_id && url !== 'sign/getVersion') {
+        await sleep(1000)
+    }
+    // 需要鉴权的接口必须有token
     if (auth !== false && !store.getters.token) {
         toLogin()
         return

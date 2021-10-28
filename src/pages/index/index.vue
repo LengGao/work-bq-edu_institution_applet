@@ -199,7 +199,7 @@ export default {
       });
     },
     toSelectId() {
-      uni.redirectTo({
+      uni.navigateTo({
         url: `/pages/selectQuestionBank/index`,
       });
     },

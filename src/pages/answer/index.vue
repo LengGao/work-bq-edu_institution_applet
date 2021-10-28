@@ -123,7 +123,7 @@ import {
   getUserTopicRecord,
   submitWrongQuestion,
 } from "@/api/index";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "answer",
   components: {
@@ -223,6 +223,13 @@ export default {
     isAnalysis,
     isContinue,
   }) {
+    // debug模式需要登录才能刷题
+    if (this.$store.getters.appInfo.debug) {
+      uni.redirectTo({
+        url: "/pages/login/index",
+      });
+      return;
+    }
     this.type = type;
     this.time = time;
     this.isExam = isExam;
