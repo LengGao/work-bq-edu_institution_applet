@@ -64,6 +64,9 @@ export default {
     flex-shrink: 0;
     margin-right: 12rpx;
   }
+  &-text {
+    flex: 1;
+  }
   &--active {
     color: @primary;
     border-color: @primary;

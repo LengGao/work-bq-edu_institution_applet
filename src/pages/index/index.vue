@@ -2,7 +2,9 @@
   <view class="index">
     <view class="header" @click="toSelectId">
       <text class="iconfont">&#xe64f;</text>
-      <text class="title">{{ questionBankInfo.question_bank_name }}</text>
+      <text class="title">{{
+        questionBankInfo.question_bank_name || question_bank_name
+      }}</text>
       <van-icon name="arrow-down" />
     </view>
     <view class="card card--primary" @click="linkTo('clockIn')">
@@ -154,6 +156,7 @@ export default {
         answer_total_num: 0,
         correct_rate: 0,
       },
+      question_bank_name: "",
     };
   },
   onShow() {
@@ -192,6 +195,7 @@ export default {
         clock.is_clock === 1 ? clock.correct_rate : "--";
       this.clockData = clock;
       this.practice = res.data.practice || {};
+      this.question_bank_name = res.data.question_bank_name;
     },
     linkTo(path) {
       uni.navigateTo({

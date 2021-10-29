@@ -1,12 +1,20 @@
 <script>
 import { mapActions } from "vuex";
 export default {
-  onLaunch: function ({ query }) {
-    const { is_share, question_bank_id, question_bank_name } = query;
+  onLaunch: function (options) {
+    console.log(options);
+    const { scene } = options.query;
+    let is_share, question_bank_id;
+    if (scene) {
+      let paramsStr = decodeURIComponent(scene);
+      question_bank_id = this.getQueryString(paramsStr, "q");
+      is_share = this.getQueryString(paramsStr, "is_share");
+      console.log("question_bank_id=>", question_bank_id);
+      console.log("is_share=>", is_share);
+    }
     if (question_bank_id) {
       this.$store.dispatch("setQuestionBankInfo", {
         question_bank_id,
-        question_bank_name,
       });
     }
     console.log("App Launch");
@@ -22,6 +30,12 @@ export default {
   },
   methods: {
     ...mapActions(["getAppInfo"]),
+    getQueryString(str, name) {
+      var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+      var r = str.match(reg);
+      if (r != null) return unescape(r[2]);
+      return null;
+    },
   },
 };
 </script>

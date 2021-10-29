@@ -240,6 +240,10 @@ export default {
     this.createQuestion(chapterId, isExam, isContinue);
   },
   onUnload() {
+    // debug模式需要登录才能刷题
+    if (this.$store.getters.appInfo.debug) {
+      return;
+    }
     if (!["7", "8"].includes(this.type)) {
       this.settlement();
     }
@@ -293,6 +297,9 @@ export default {
       }
     },
     onTimeOut() {
+      if (this.model !== "2") {
+        return;
+      }
       Dialog.alert({
         title: "提示",
         message: "考试时间到，系统自动交卷",
@@ -469,6 +476,7 @@ export default {
       }
     },
     toTestResoult() {
+      this.submitOtherAnswer();
       this.duration = 0;
       this.hasSettlement = true;
       setTimeout(() => {

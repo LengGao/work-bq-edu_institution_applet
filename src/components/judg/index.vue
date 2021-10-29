@@ -54,9 +54,17 @@ export default {
       }
       this.$emit("change", val, this.options.id);
     },
+    model() {
+      if (this.model === "3") {
+        this.correctAnswer = this.options.topic_answer;
+      }
+    },
   },
   created() {
     if (this.options.userAnswer && this.model === "1") {
+      this.correctAnswer = this.options.topic_answer;
+    }
+    if (this.model === "3") {
       this.correctAnswer = this.options.topic_answer;
     }
   },

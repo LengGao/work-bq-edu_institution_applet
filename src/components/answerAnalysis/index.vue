@@ -10,7 +10,7 @@
       </view>
     </view>
     <view class="title">答案解析</view>
-    <view class="content">
+    <view>
       <view> <u-parse :content="desc || '无'" /> </view>
     </view>
   </view>
