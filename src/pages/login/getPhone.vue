@@ -54,8 +54,8 @@ export default {
         uni.removeStorageSync("wxCode");
         uni.removeStorageSync("encryptedData");
         uni.removeStorageSync("iv");
-        uni.switchTab({
-          url: "/pages/index/index",
+        uni.navigateBack({
+          delta: 2,
         });
       }
     },

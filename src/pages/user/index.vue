@@ -74,7 +74,7 @@ export default {
   },
   methods: {
     toLogin() {
-      uni.redirectTo({
+      uni.navigateTo({
         url: "/pages/login/index",
       });
     },
