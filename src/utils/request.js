@@ -22,11 +22,17 @@ const errorHandler = {
 const sleep = (time) => new Promise(resolve => {
     setTimeout(resolve, time);
 })
+const getOrganizationId = async () => {
+    await sleep(500)
+    if (!store.getters.organization_id) {
+        await getOrganizationId()
+    }
+}
 const requset = (options) => new Promise(async (resolve, reject) => {
     const { auth = true, loading, data, header = {}, url } = options
     // 等一下sign/getVersion 接口请求结果
     if (!store.getters.organization_id && url !== 'sign/getVersion') {
-        await sleep(1000)
+        await getOrganizationId()
     }
     // 需要鉴权的接口必须有token
     if (auth !== false && !store.getters.token) {

@@ -5,7 +5,8 @@ export const getVersion = (data) => {
         url: 'sign/getVersion',
         method: 'post',
         data,
-        auth: false
+        auth: false,
+        loading: true
     })
 }
 // 授权登录

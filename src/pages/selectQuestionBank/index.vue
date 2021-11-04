@@ -64,22 +64,13 @@ export default {
   computed: {
     ...mapGetters(["questionBankInfo", "organization_id"]),
   },
-  watch: {
-    // 请求判断了token，一定要等到getVersion 接口走完才能请求，
-    // organization_id 是getVersion 接口返回的,判断organization_id就好了
-    organization_id: {
-      handler(val) {
-        console.log("organization_id", val);
-        val && this.getQuestionBankList();
-      },
-      immediate: true,
-    },
+  onLoad() {
+    this.getQuestionBankList();
   },
   methods: {
     ...mapActions(["setQuestionBankInfo"]),
     async getQuestionBankList() {
       const res = await getQuestionBankList();
-      console.log(res);
       this.typeList = res.data;
     },
     handleSelect(data) {
