@@ -54,9 +54,16 @@ export default {
         uni.removeStorageSync("wxCode");
         uni.removeStorageSync("encryptedData");
         uni.removeStorageSync("iv");
-        uni.navigateBack({
-          delta: 2,
-        });
+        const indexPage = getCurrentPages()[0] || {};
+        if (indexPage.route === "pages/login/index") {
+          uni.switchTab({
+            url: "/pages/index/index",
+          });
+        } else {
+          uni.navigateBack({
+            delta: 2,
+          });
+        }
       }
     },
     async getUserInfo(e) {

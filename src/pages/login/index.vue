@@ -42,7 +42,7 @@ export default {
   computed: {
     ...mapGetters(["appInfo"]),
   },
-  onLoad() {
+  onShow() {
     this.wxLogin();
   },
   methods: {
