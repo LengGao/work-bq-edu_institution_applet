@@ -161,21 +161,26 @@ export default {
   },
   onShow() {
     this.hasQuestionId();
+    // 获取到 appInfo.app_name 的时候可能在跳转中，设置不到title。
+    // 所以在onshow 固定调一次
+    this.setTitle();
   },
   computed: {
     ...mapGetters(["appInfo", "questionBankInfo"]),
   },
   watch: {
-    "appInfo.app_name": {
-      handler(val) {
-        uni.setNavigationBarTitle({
-          title: val,
-        });
-      },
-      immediate: true,
+    "appInfo.app_name"() {
+      this.setTitle();
     },
   },
   methods: {
+    setTitle() {
+      const title = this.appInfo.app_name;
+      title &&
+        uni.setNavigationBarTitle({
+          title,
+        });
+    },
     hasQuestionId() {
       if (!this.questionBankInfo.question_bank_id) {
         this.toSelectId();
