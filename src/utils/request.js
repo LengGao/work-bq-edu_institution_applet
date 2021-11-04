@@ -28,6 +28,11 @@ const getOrganizationId = async () => {
         await getOrganizationId()
     }
 }
+const showToast = (options) => {
+    setTimeout(() => {
+        uni.showToast(options)
+    });
+}
 const requset = (options) => new Promise(async (resolve, reject) => {
     const { auth = true, loading, data, header = {}, url } = options
     // 等一下sign/getVersion 接口请求结果
@@ -59,7 +64,7 @@ const requset = (options) => new Promise(async (resolve, reject) => {
             console.log(`${url} >>success：`, data)
             if (data.error_code !== 0) {
                 errorHandler[data.error_code] && errorHandler[data.error_code]()
-                uni.showToast({
+                showToast({
                     icon: 'none',
                     title: data.message
                 })
@@ -69,7 +74,7 @@ const requset = (options) => new Promise(async (resolve, reject) => {
         },
         fail: (error) => {
             console.log(`${url} >>error：`, error)
-            uni.showToast({
+            showToast({
                 icon: 'error',
                 title: error.errMsg || '稍后再试'
             })
