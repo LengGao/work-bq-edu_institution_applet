@@ -12,6 +12,17 @@
 			}
 		},
 		{
+			"path": "pages/clockIn/index",
+			"style": {
+				"navigationBarTitleText": "每日打卡",
+				"navigationStyle": "custom",
+				"usingComponents": {
+					"van-nav-bar": "/wxcomponents/vant/nav-bar/index",
+					"van-icon": "/wxcomponents/vant/icon/index"
+				}
+			}
+		},
+		{
 			"path": "pages/autonomy/index",
 			"style": {
 				"navigationBarTitleText": "自主出题",
@@ -130,13 +141,6 @@
 			"path": "pages/testExamConfig/index",
 			"style": {
 				"navigationBarTitleText": "试卷介绍",
-				"usingComponents": {}
-			}
-		},
-		{
-			"path": "pages/clockIn/index",
-			"style": {
-				"navigationBarTitleText": "每日打卡",
 				"usingComponents": {}
 			}
 		},

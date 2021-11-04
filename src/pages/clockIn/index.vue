@@ -1,5 +1,13 @@
 <template>
   <div class="clock-in">
+    <van-nav-bar
+      @click-left="goBack"
+      :border="false"
+      custom-class="custom-nav-bar"
+      title="每日打卡"
+    >
+      <van-icon name="arrow-left" size="40rpx" color="#fff" slot="left" />
+    </van-nav-bar>
     <image class="b-img" src="../../static/clock-in-background.png"></image>
     <view class="clock-in-header">
       <view class="date">{{ getNowFormatDate() }}</view>
@@ -109,16 +117,26 @@ export default {
 <style lang="less" scoped>
 @import "@/styles/var";
 .clock-in {
+  /deep/.custom-nav-bar {
+    background-color: inherit;
+    .van-nav-bar__left {
+      left: 18rpx;
+    }
+    .van-nav-bar__title {
+      font-size: 32rpx;
+      color: #fff;
+    }
+  }
   .b-img {
     position: absolute;
     left: 0;
-    top: -120rpx;
+    top: 0;
     width: 100%;
     height: 408rpx;
     z-index: -1;
   }
   &-header {
-    padding: 40rpx 30rpx 0;
+    padding: 56rpx 30rpx 0;
     color: #fff;
   }
   &-container {
