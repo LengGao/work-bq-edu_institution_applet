@@ -123,7 +123,7 @@ import {
   getUserTopicRecord,
   submitWrongQuestion,
 } from "@/api/index";
-import { mapActions, mapGetters } from "vuex";
+import { mapActions } from "vuex";
 export default {
   name: "answer",
   components: {
@@ -245,7 +245,9 @@ export default {
       return;
     }
     if (!["7", "8"].includes(this.type)) {
-      this.settlement();
+      this.submitOtherAnswer().then(() => {
+        this.settlement();
+      });
     }
   },
   methods: {
@@ -310,16 +312,17 @@ export default {
     },
     // 提交其他题型答案
     submitOtherAnswer() {
-      if (this.type === "7") {
-        // 收藏夹不用提交答案
-        return;
-      }
-      if (this.hasSettlement) {
-        return;
-      }
-      for (const id in this.userAnswerMap) {
-        this.userAnswerMap[id] && this.submitAnswer(id, this.userAnswerMap[id]);
-      }
+      return new Promise(async (resolve) => {
+        if (this.type === "7" || this.hasSettlement) {
+          // 收藏夹，结算过 不用提交答案
+          return resolve();
+        }
+        for (const id in this.userAnswerMap) {
+          this.userAnswerMap[id] &&
+            (await this.submitAnswer(id, this.userAnswerMap[id]));
+        }
+        resolve();
+      });
     },
     // 案例题里的index
     onCaseIndexChange(index) {
@@ -388,14 +391,12 @@ export default {
     onAnimationfinish({ detail }) {
       const { current } = detail;
       this.onSwiperBoundary();
+      this.submitOtherAnswer();
     },
     onSwiperChange({ detail }) {
       const { current } = detail;
       this.currentIndex = current;
       this.caseIndex = 0;
-      this.$nextTick(() => {
-        this.submitOtherAnswer();
-      });
     },
 
     // 题目收藏
