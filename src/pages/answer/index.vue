@@ -318,8 +318,13 @@ export default {
           return resolve();
         }
         for (const id in this.userAnswerMap) {
-          this.userAnswerMap[id] &&
-            (await this.submitAnswer(id, this.userAnswerMap[id]));
+          if (Array.isArray(this.userAnswerMap[id])) {
+            this.userAnswerMap[id].length &&
+              (await this.submitAnswer(id, this.userAnswerMap[id]));
+          } else {
+            this.userAnswerMap[id] &&
+              (await this.submitAnswer(id, this.userAnswerMap[id]));
+          }
         }
         resolve();
       });
